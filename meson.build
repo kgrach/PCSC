@@ -83,7 +83,10 @@ pcscd_src = [
   'src/winscard.c',
   'src/winscard_msg.c',
   'src/winscard_msg_srv.c',
-  'src/winscard_svc.c'
+  'src/winscard_svc.c',
+  'src/thrift/gen-c_glib/ogon.c',
+  'src/thrift/gen-c_glib/ogon_types.c',
+  'src/thrift/client.c'
   ]
 gen_src = gen_flex.process('src/configfile.l', 'src/tokenparser.l')
 pcscd_src += gen_src
@@ -108,6 +111,8 @@ if get_option('libusb')
   conf_data.set('HAVE_LIBUSB', true)
   features += 'libusb'
 endif
+
+thrift_dep = dependency('thrift_c_glib')
 
 cc = meson.get_compiler('c')
 dl_deps = cc.find_library('dl', required: false)
@@ -134,7 +139,7 @@ if pcsc_arch == 'Darwin'
 endif
 conf_data.set_quoted('PCSC_ARCH', pcsc_arch)
 
-pcscd_dep += [polkit_dep, systemd_dep, dl_deps]
+pcscd_dep += [polkit_dep, systemd_dep, dl_deps, thrift_dep]
 
 features +=  pcsc_arch
 features += target_machine.cpu()

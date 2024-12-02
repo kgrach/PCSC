@@ -1,0 +1,4 @@
+sudo dnf install meson flex polkit*
+
+cd src/thrift 
+thrift --gen c_glib ogon.thrift
