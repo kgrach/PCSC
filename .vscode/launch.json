@@ -5,12 +5,41 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) Launch pcscd",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/builddir/testpcsc",
+            "program": "/home/gka/repos/PCSC/builddir/pcscd",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
+            "cwd": "/home/gka/repos/PCSC/builddir/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set follow fork mode child",
+                    "text": "set follow-fork-mode child",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch pcsc_demo",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/builddir/pcsc_demo",
+            "args": [],
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}/builddir/",
             "environment": [],
             "externalConsole": false,

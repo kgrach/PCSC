@@ -3,8 +3,10 @@
 
 #include "pcsclite.h"
 
-int start_client ();
+void start_client ();
 void stop_client();
+
+extern int rdp_ready;
 
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
                                 LPCVOID pvReserved1, 

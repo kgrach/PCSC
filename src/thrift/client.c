@@ -15,16 +15,18 @@ static ThriftProtocol   *protocol   = NULL;
 static GError           *error      = NULL;
 static ogonIf           *client     = NULL;
 
-int start_client (void) {
+int rdp_ready = 0;
 
-  gboolean success = FALSE;
+void __attribute__((constructor)) start_client (void) {
   
+  gboolean success = FALSE;
+
 #if (!GLIB_CHECK_VERSION (2, 36, 0))
   g_type_init ();
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "localhost",
+                            "hostname",  "192.168.1.60",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -41,11 +43,11 @@ int start_client (void) {
 
   success = thrift_transport_open(transport, &error);
   
-  return (success ? 0 : 1 );
+  rdp_ready = (success ? 1 : 0 );
 }
 
 
-void stop_client() {
+void __attribute__((destructor)) stop_client() {
 
   thrift_transport_close (transport, &error);
 
