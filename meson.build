@@ -83,10 +83,7 @@ pcscd_src = [
   'src/winscard.c',
   'src/winscard_msg.c',
   'src/winscard_msg_srv.c',
-  'src/winscard_svc.c',
-  'src/thrift/gen-c_glib/ogon.c',
-  'src/thrift/gen-c_glib/ogon_types.c',
-  'src/thrift/client.c'
+  'src/winscard_svc.c'
   ]
 gen_src = gen_flex.process('src/configfile.l', 'src/tokenparser.l')
 pcscd_src += gen_src
@@ -125,7 +122,7 @@ endif
 
 systemd_dep = dependency('libsystemd', required : get_option('libsystemd'))
 if systemd_dep.found()
-  conf_data.set('USE_LIBSYSTEMD', true)
+  conf_data.set('USE_LIBSYSTEMD', false)
   features += 'systemd'
 endif
 
@@ -139,7 +136,7 @@ if pcsc_arch == 'Darwin'
 endif
 conf_data.set_quoted('PCSC_ARCH', pcsc_arch)
 
-pcscd_dep += [polkit_dep, systemd_dep, dl_deps, thrift_dep]
+pcscd_dep += [polkit_dep, systemd_dep, dl_deps]
 
 features +=  pcsc_arch
 features += target_machine.cpu()
@@ -166,12 +163,15 @@ libpcsclite_real_src = [
   'src/simclist.c',
   'src/sys_unix.c',
   'src/utils.c',
-  'src/winscard_msg.c'
+  'src/winscard_msg.c',
+  'src/thrift/gen-c_glib/ogon.c',
+  'src/thrift/gen-c_glib/ogon_types.c',
+  'src/thrift/client.c'
   ]
 library('pcsclite_real',
   libpcsclite_real_src,
   include_directories : incdir,
-  dependencies : threads_dep,
+  dependencies : [threads_dep, thrift_dep],
   c_args: '-DLIBPCSCLITE -DSIMCLIST_NO_DUMPRESTORE',
   soversion : 1,
   install : true)

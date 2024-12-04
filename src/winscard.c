@@ -119,8 +119,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "utils.h"
 #include "reader.h"
 
-#include "thrift/client.h"
-
 #undef DO_PROFILE
 #ifdef DO_PROFILE
 
@@ -194,9 +192,6 @@ LONG SCardEstablishContext(DWORD dwScope, /*@unused@*/ LPCVOID pvReserved1,
 {	
 	(void)pvReserved1;
 	(void)pvReserved2;
-
-	if(rdp_ready)
-		return Ogon_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext);
 
 	if (dwScope != SCARD_SCOPE_USER && dwScope != SCARD_SCOPE_TERMINAL &&
 		dwScope != SCARD_SCOPE_SYSTEM && dwScope != SCARD_SCOPE_GLOBAL)

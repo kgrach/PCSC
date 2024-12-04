@@ -127,6 +127,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "winscard_msg.h"
 #include "utils.h"
 
+#include "thrift/client.h"
+
 /* Display, on stderr, a trace of the WinSCard calls with arguments and
  * results */
 //#define DO_TRACE
@@ -468,6 +470,10 @@ LONG SCardEstablishContext(DWORD dwScope, LPCVOID pvReserved1,
 
 	API_TRACE_IN("%ld, %p, %p", dwScope, pvReserved1, pvReserved2)
 	PROFILE_START
+
+	
+	if(rdp_ready)
+		return Ogon_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext);
 
 	/* Check if the server is running */
 	rv = SCardCheckDaemonAvailability();
@@ -2870,6 +2876,10 @@ LONG SCardListReaders(SCARDCONTEXT hContext, /*@unused@*/ LPCSTR mszGroups,
 	(void)mszGroups;
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
+
+
+	if(rdp_ready)
+		return Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
 
 	/*
 	 * Check for NULL parameters
