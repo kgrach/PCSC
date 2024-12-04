@@ -62,7 +62,7 @@ void __attribute__((destructor)) stop_client() {
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
-		                        LPSCARDCONTEXT phContext) {
+		                            LPSCARDCONTEXT phContext) {
     
     LONG ret = SCARD_F_INTERNAL_ERROR;
 
@@ -73,6 +73,29 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
       g_object_get(ret_rpc,
                    "retValue", &ret,
                    "cardContext", phContext,
+                   NULL);                 
+    }
+
+    g_object_unref(ret_rpc);
+
+    return ret;
+}
+
+LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
+                           LPCSTR mszGroups,
+	                         LPSTR mszReaders, 
+                           LPDWORD pcchReaders) {
+    
+    LONG ret = SCARD_F_INTERNAL_ERROR;
+
+    return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
+    
+    if (ogon_if_list_readers(client, &ret_rpc, (SCARDCONTEXT_RPC)hContext, (LPCSTR_RPC)mszGroups, &error)) {
+
+      g_object_get(ret_rpc,
+                   "retValue", &ret,
+                   "Readers",  mszReaders,
+                   "ReadersLen", pcchReaders,
                    NULL);                 
     }
 

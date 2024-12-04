@@ -3,8 +3,6 @@
 
 #include "pcsclite.h"
 
-void start_client ();
-void stop_client();
 
 extern int rdp_ready;
 
@@ -13,5 +11,9 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
                                 LPCVOID pvReserved2,
 		                        LPSCARDCONTEXT phContext);
 
+LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
+                           LPCSTR mszGroups,
+	                       LPSTR mszReaders, 
+                           LPDWORD pcchReaders); 
 
 #endif
