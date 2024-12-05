@@ -90,12 +90,12 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
     return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
     
-    if (ogon_if_list_readers(client, &ret_rpc, (SCARDCONTEXT_RPC)hContext, (LPCSTR_RPC)mszGroups, &error)) {
+    if (ogon_if_list_readers(client, &ret_rpc, (SCARDCONTEXT_RPC)hContext, &error)) {
 
       g_object_get(ret_rpc,
                    "retValue", &ret,
-                   "Readers",  mszReaders,
-                   "ReadersLen", pcchReaders,
+                   "mszReaders",  mszReaders,
+                   "pcchReaders", pcchReaders,
                    NULL);                 
     }
 

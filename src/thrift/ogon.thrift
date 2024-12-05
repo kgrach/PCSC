@@ -12,13 +12,13 @@ struct return_ec {
 
 struct return_lr {
   1: LONG_RPC         retValue,
-  2: LPSTR_RPC        Readers, 
-  3: LPDWORD_RPC      ReadersLen
+  2: LPSTR_RPC        mszReaders, 
+  3: LPDWORD_RPC      pcchReaders
 }
 
 service ogon {
    return_ec EstablishContext(1: DWORD_RPC dwScope)
-   return_lr ListReaders(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC mszGroups);
+   return_lr ListReaders(1: SCARDCONTEXT_RPC hContext);
 }
 
 
