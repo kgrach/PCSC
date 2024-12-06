@@ -11,6 +11,8 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
                                 LPCVOID pvReserved2,
 		                        LPSCARDCONTEXT phContext);
 
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext);                                
+
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
 	                       LPSTR mszReaders, 

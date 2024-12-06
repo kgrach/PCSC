@@ -82,6 +82,24 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
     return ret;
 }
 
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext){
+
+    LONG ret = SCARD_F_INTERNAL_ERROR;
+
+    return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
+    
+    if (ogon_if_release_context(client, &ret_rpc, hContext, &error)) {
+
+      g_object_get(ret_rpc,
+                   "retValue", &ret,
+                   NULL);                 
+    }
+
+    g_object_unref(ret_rpc);
+
+    return ret;
+}
+
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
 	                         LPSTR mszReaders, 

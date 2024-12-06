@@ -702,6 +702,11 @@ LONG SCardReleaseContext(SCARDCONTEXT hContext)
 	API_TRACE_IN("%ld", hContext)
 	PROFILE_START
 
+	if(rdp_ready) {
+		rv = Ogon_SCardReleaseContext(hContext);
+		goto end2;
+	}
+
 	/*
 	 * Make sure this context has been opened
 	 * and get currentContextMap
@@ -742,7 +747,7 @@ end:
 	SCardLockThread();
 	SCardRemoveContext(hContext);
 	SCardUnlockThread();
-
+end2:
 error:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")

@@ -11,6 +11,10 @@ struct return_ec {
   2: SCARDCONTEXT_RPC   cardContext
 }
 
+struct return_rc {
+  1: LONG_RPC           retValue
+}
+
 struct return_lr {
   1: LONG_RPC         retValue,
   2: LPSTR_RPC        mszReaders, 
@@ -24,11 +28,11 @@ struct return_c {
 }
 
 service ogon {
-   return_ec EstablishContext(1: DWORD_RPC dwScope)
+   return_ec EstablishContext(1: DWORD_RPC dwScope);
+   return_rc ReleaseContext(1: SCARDCONTEXT_RPC hContext);
    return_lr ListReaders(1: SCARDCONTEXT_RPC hContext);
    return_c  Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols);
 }
-
 
 
 
