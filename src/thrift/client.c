@@ -65,39 +65,21 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
                                 LPCVOID pvReserved2,
 		                            LPSCARDCONTEXT phContext) {
     
-    LONG ret = SCARD_F_INTERNAL_ERROR;
+  LONG ret = SCARD_F_INTERNAL_ERROR;
 
-    return_ec *ret_rpc = g_object_new(TYPE_RETURN_EC, NULL);
-    
-    if (ogon_if_establish_context(client, &ret_rpc, dwScope, &error)) {
+  return_ec *ret_rpc = g_object_new(TYPE_RETURN_EC, NULL);
+  
+  if (ogon_if_establish_context(client, &ret_rpc, dwScope, &error)) {
 
-      g_object_get(ret_rpc,
-                   "retValue", &ret,
-                   "cardContext", phContext,
-                   NULL);                 
-    }
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "cardContext", phContext,
+                  NULL);                 
+  }
 
-    g_object_unref(ret_rpc);
+  g_object_unref(ret_rpc);
 
-    return ret;
-}
-
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext){
-
-    LONG ret = SCARD_F_INTERNAL_ERROR;
-
-    return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
-    
-    if (ogon_if_release_context(client, &ret_rpc, hContext, &error)) {
-
-      g_object_get(ret_rpc,
-                   "retValue", &ret,
-                   NULL);                 
-    }
-
-    g_object_unref(ret_rpc);
-
-    return ret;
+  return ret;
 }
 
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
@@ -105,52 +87,52 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 	                         LPSTR mszReaders, 
                            LPDWORD pcchReaders) {
     
-    LONG ret = SCARD_F_INTERNAL_ERROR;
+  LONG ret = SCARD_F_INTERNAL_ERROR;
 
-    return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
-    
-    if (ogon_if_list_readers(client, &ret_rpc, hContext, &error)) {
+  return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
+  
+  if (ogon_if_list_readers(client, &ret_rpc, hContext, &error)) {
 
-      LPSTR_RPC Readers = NULL;
-      DWORD_RPC chReaders = 0;
-      char *buf = NULL;
+    LPSTR_RPC Readers = NULL;
+    DWORD_RPC chReaders = 0;
+    char *buf = NULL;
 
-      g_object_get(ret_rpc,
-                   "retValue", &ret,
-                   "mszReaders",  &Readers,
-                   "pcchReaders", &chReaders,
-                   NULL);           
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "mszReaders",  &Readers,
+                  "pcchReaders", &chReaders,
+                  NULL);           
 
-      if(*mszReaders) {
-        
-        if(*pcchReaders < chReaders) {
-          ret = SCARD_E_INSUFFICIENT_BUFFER;
-          goto end; 
-        } 
-               
-      } else {
+    if(*mszReaders) {
+      
+      if(*pcchReaders < chReaders) {
+        ret = SCARD_E_INSUFFICIENT_BUFFER;
+        goto end; 
+      } 
+              
+    } else {
 
-        buf = malloc(chReaders);
-        
-        if (NULL == buf) {
-          ret = SCARD_E_NO_MEMORY;
-          goto end;
-        }
-
-		    *(char**)mszReaders = buf;
+      buf = malloc(chReaders);
+      
+      if (NULL == buf) {
+        ret = SCARD_E_NO_MEMORY;
+        goto end;
       }
 
-      memcpy(*(char**)mszReaders, Readers, chReaders);
-      
-      g_free (Readers);
-
-      *pcchReaders = chReaders;
+      *(char**)mszReaders = buf;
     }
+
+    memcpy(*(char**)mszReaders, Readers, chReaders);
+    
+    g_free (Readers);
+
+    *pcchReaders = chReaders;
+  }
 end:
 
-    g_object_unref(ret_rpc);
+  g_object_unref(ret_rpc);
 
-    return ret;
+  return ret;
 }
 
 LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
@@ -159,25 +141,67 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
                        DWORD dwPreferredProtocols, 
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol) {
-    LONG ret = SCARD_F_INTERNAL_ERROR;
+  LONG ret = SCARD_F_INTERNAL_ERROR;
 
-    return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
+  return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
+  
+  if (ogon_if_connect(client, &ret_rpc, hContext, (LPCSTR_RPC)szReader, dwShareMode, dwPreferredProtocols, &error)) {
     
-    if (ogon_if_connect(client, &ret_rpc, hContext, (LPCSTR_RPC)szReader, dwShareMode, dwPreferredProtocols, &error)) {
-      
-      SCARDHANDLE_RPC hCard;
-      DWORD_RPC       activeProtocol;
+    SCARDHANDLE_RPC hCard;
+    DWORD_RPC       activeProtocol;
 
-      g_object_get(ret_rpc,
-                   "retValue",  &ret,
-                   "phCard",    &hCard,
-                   "pdwActiveProtocol", &activeProtocol,
-                   NULL);   
-      *phCard = hCard;
-      *pdwActiveProtocol = activeProtocol;
-    }
+    g_object_get(ret_rpc,
+                  "retValue",  &ret,
+                  "phCard",    &hCard,
+                  "pdwActiveProtocol", &activeProtocol,
+                  NULL);   
+    *phCard = hCard;
+    *pdwActiveProtocol = activeProtocol;
+  }
 
-    g_object_unref(ret_rpc);
+  g_object_unref(ret_rpc);
 
-    return ret;
+  return ret;
+}
+
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext){
+
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  //return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
+  
+  if (ogon_if_release_context(client, &ret, hContext, &error)) {
+
+    /*g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  NULL);                 */
+  }
+
+  //g_object_unref(ret_rpc);
+
+  return ret;
+}
+
+LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
+  
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  //return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
+    
+  if (ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error)) {
+
+    /*g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  NULL);                 */
+  }
+
+  //g_object_unref(ret_rpc);
+
+  return ret;
+}
+
+LONG Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
+  
+  if(pvMem)
+    free(pvMem);
 }

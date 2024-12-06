@@ -1081,6 +1081,11 @@ LONG SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition)
 	PROFILE_START
 	API_TRACE_IN("%ld %ld", hCard, dwDisposition)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardDisconnect(hCard, dwDisposition);
+		goto end2;
+	}
+
 	/*
 	 * Make sure this handle has been opened
 	 */
@@ -1118,6 +1123,7 @@ LONG SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition)
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
+end2:
 error:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")
@@ -3010,6 +3016,11 @@ LONG SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem)
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		Ogon_SCardFreeMemory(hContext, pvMem);
+		goto end;
+	}
+
 	/*
 	 * Make sure this context has been opened
 	 */
@@ -3018,6 +3029,7 @@ LONG SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem)
 
 	free((void *)pvMem);
 
+end:
 	PROFILE_END(rv)
 
 	return rv;

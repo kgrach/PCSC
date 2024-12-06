@@ -9,9 +9,7 @@ extern int rdp_ready;
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
-		                        LPSCARDCONTEXT phContext);
-
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext);                                
+		                        LPSCARDCONTEXT phContext);                             
 
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
@@ -24,5 +22,11 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
                        DWORD dwPreferredProtocols, 
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol);
+
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext); 
+
+LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);
+
+LONG Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
 
 #endif
