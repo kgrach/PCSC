@@ -833,6 +833,11 @@ LONG SCardConnect(SCARDCONTEXT hContext, LPCSTR szReader,
 	if (strlen(szReader) > MAX_READERNAME)
 		return SCARD_E_INVALID_VALUE;
 
+	if(rdp_ready) {
+		rv = Ogon_SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols, phCard, pdwActiveProtocol);
+		goto end2;
+	}
+
 	/*
 	 * Make sure this context has been opened
 	 */
@@ -881,6 +886,8 @@ LONG SCardConnect(SCARDCONTEXT hContext, LPCSTR szReader,
 
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
+
+end2:
 
 	PROFILE_END(rv)
 	API_TRACE_OUT("%d", *pdwActiveProtocol)

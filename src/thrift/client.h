@@ -15,5 +15,12 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                            LPCSTR mszGroups,
 	                       LPSTR mszReaders, 
                            LPDWORD pcchReaders); 
+                           
+LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
+                       LPCSTR szReader,
+	                   DWORD dwShareMode, 
+                       DWORD dwPreferredProtocols, 
+                       LPSCARDHANDLE phCard,
+                       LPDWORD pdwActiveProtocol);
 
 #endif

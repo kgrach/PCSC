@@ -7,6 +7,7 @@
 #include <glib.h>
 
 #include "gen-c_glib/ogon.h"
+#include "gen-c_glib/ogon_types.h"
 #include "client.h"
 
 static ThriftSocket     *socket     = NULL;
@@ -90,10 +91,10 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
     return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
     
-    if (ogon_if_list_readers(client, &ret_rpc, (SCARDCONTEXT_RPC)hContext, &error)) {
+    if (ogon_if_list_readers(client, &ret_rpc, hContext, &error)) {
 
-      LPSTR Readers = NULL;
-      DWORD chReaders = 0;
+      LPSTR_RPC Readers = NULL;
+      DWORD_RPC chReaders = 0;
       char *buf = NULL;
 
       g_object_get(ret_rpc,
@@ -128,6 +129,35 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
       *pcchReaders = chReaders;
     }
 end:
+
+    g_object_unref(ret_rpc);
+
+    return ret;
+}
+
+LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
+                       LPCSTR szReader,
+	                     DWORD dwShareMode, 
+                       DWORD dwPreferredProtocols, 
+                       LPSCARDHANDLE phCard,
+                       LPDWORD pdwActiveProtocol) {
+    LONG ret = SCARD_F_INTERNAL_ERROR;
+
+    return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
+    
+    if (ogon_if_connect(client, &ret_rpc, hContext, (LPCSTR_RPC)szReader, dwShareMode, dwPreferredProtocols, &error)) {
+      
+      SCARDHANDLE_RPC hCard;
+      DWORD_RPC       activeProtocol;
+
+      g_object_get(ret_rpc,
+                   "retValue",  &ret,
+                   "phCard",    &hCard,
+                   "pdwActiveProtocol", &activeProtocol,
+                   NULL);   
+      *phCard = hCard;
+      *pdwActiveProtocol = activeProtocol;
+    }
 
     g_object_unref(ret_rpc);
 
