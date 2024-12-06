@@ -26,7 +26,7 @@ void __attribute__((constructor)) start_client (void) {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.60",
+                            "hostname",  "192.168.1.64",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -92,12 +92,42 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
     
     if (ogon_if_list_readers(client, &ret_rpc, (SCARDCONTEXT_RPC)hContext, &error)) {
 
+      LPSTR Readers = NULL;
+      DWORD chReaders = 0;
+      char *buf = NULL;
+
       g_object_get(ret_rpc,
                    "retValue", &ret,
-                   "mszReaders",  mszReaders,
-                   "pcchReaders", pcchReaders,
-                   NULL);                 
+                   "mszReaders",  &Readers,
+                   "pcchReaders", &chReaders,
+                   NULL);           
+
+      if(*mszReaders) {
+        
+        if(*pcchReaders < chReaders) {
+          ret = SCARD_E_INSUFFICIENT_BUFFER;
+          goto end; 
+        } 
+               
+      } else {
+
+        buf = malloc(chReaders);
+        
+        if (NULL == buf) {
+          ret = SCARD_E_NO_MEMORY;
+          goto end;
+        }
+
+		    *(char**)mszReaders = buf;
+      }
+
+      memcpy(*(char**)mszReaders, Readers, chReaders);
+      
+      g_free (Readers);
+
+      *pcchReaders = chReaders;
     }
+end:
 
     g_object_unref(ret_rpc);
 

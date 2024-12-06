@@ -472,8 +472,10 @@ LONG SCardEstablishContext(DWORD dwScope, LPCVOID pvReserved1,
 	PROFILE_START
 
 	
-	if(rdp_ready)
-		return Ogon_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext);
+	if(rdp_ready) {
+		rv = Ogon_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext);
+		goto end;
+	}
 
 	/* Check if the server is running */
 	rv = SCardCheckDaemonAvailability();
@@ -2878,15 +2880,16 @@ LONG SCardListReaders(SCARDCONTEXT hContext, /*@unused@*/ LPCSTR mszGroups,
 	API_TRACE_IN("%ld", hContext)
 
 
-	if(rdp_ready)
-		return Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
-
 	/*
 	 * Check for NULL parameters
 	 */
 	if (pcchReaders == NULL)
 		return SCARD_E_INVALID_PARAMETER;
 
+	if(rdp_ready) {
+		rv = Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
+		goto end2;
+	}
 	/*
 	 * Make sure this context has been opened
 	 */
@@ -2969,6 +2972,7 @@ end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 	(void)pthread_mutex_unlock(&readerStatesMutex);
 
+end2:
 	PROFILE_END(rv)
 	API_TRACE_OUT("%d", *pcchReaders)
 
