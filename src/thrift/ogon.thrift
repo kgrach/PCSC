@@ -56,7 +56,7 @@ service ogon {
   return_lr  ListReaders(1: SCARDCONTEXT_RPC hContext)
   return_c   Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
   return_s   Status(1: SCARDHANDLE_RPC hCard)
-  return_t   Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer)
+  return_t   Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer, 4: DWORD_RPC pcbRecvLength)
 
   LONG_RPC   ReleaseContext(1: SCARDCONTEXT_RPC hContext)
   LONG_RPC   Disconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)

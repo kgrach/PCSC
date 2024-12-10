@@ -2721,6 +2721,11 @@ LONG SCardTransmit(SCARDHANDLE hCard, const SCARD_IO_REQUEST *pioSendPci,
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		rv = Ogon_SCardTransmit(hCard, pioSendPci, pbSendBuffer, cbSendLength, pioRecvPci, pbRecvBuffer, pcbRecvLength);
+		goto end2;
+	}
+
 	if (pbSendBuffer == NULL || pbRecvBuffer == NULL ||
 			pcbRecvLength == NULL || pioSendPci == NULL)
 		return SCARD_E_INVALID_PARAMETER;
@@ -2823,6 +2828,7 @@ retry:
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
+end2:
 	PROFILE_END(rv)
 
 	return rv;

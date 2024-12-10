@@ -245,7 +245,7 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
   GByteArray *sendBuf = g_byte_array_new();
   sendBuf = g_byte_array_append(sendBuf, pbSendBuffer, cbSendLength);
   
-  if (ogon_if_transmit(client, &ret_rpc, hCard, ioSendPCI, sendBuf, &error)) {
+  if (ogon_if_transmit(client, &ret_rpc, hCard, ioSendPCI, sendBuf, pcbRecvLength, &error)) {
 
     GByteArray *recvBuf = NULL;
     scard_io_request_rpc *ioRecvPCI;
