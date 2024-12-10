@@ -1429,6 +1429,11 @@ LONG SCardStatus(SCARDHANDLE hCard, LPSTR szReaderName,
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		rv = Ogon_SCardStatus(hCard, szReaderName, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen);
+		goto end2;
+	}
+
 	/* default output values */
 	if (pdwState)
 		*pdwState = 0;
@@ -1449,11 +1454,6 @@ LONG SCardStatus(SCARDHANDLE hCard, LPSTR szReaderName,
 
 	*pcchReaderLen = 0;
 	*pcbAtrLen = 0;
-
-	if(rdp_ready) {
-		rv = Ogon_SCardStatus(hCard, szReaderName, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen);
-		goto end2;
-	}
 
 	/* Retry loop for blocking behaviour */
 retry:

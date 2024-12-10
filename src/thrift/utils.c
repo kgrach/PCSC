@@ -6,24 +6,27 @@
 
 LONG Copy_WithMemAllocIfNeed(LPVOID srcBuf, DWORD srcBufLen, LPVOID* dstBuf, LPDWORD dstBufLen) {
 
-    if(*dstBuf) {
+    LPVOID buf = NULL;
 
-        if(*dstBufLen < srcBufLen) {
-            return SCARD_E_INSUFFICIENT_BUFFER;
-        } 
-                    
-    } else {
+    if(SCARD_AUTOALLOCATE == *dstBufLen) {
 
-        LPVOID buf = malloc(srcBufLen);
+        buf = malloc(srcBufLen);
         
         if (NULL == buf) {
             return SCARD_E_NO_MEMORY;
         }
 
         *dstBuf = buf;
+    } else {
+
+        if(*dstBufLen < srcBufLen) {
+            return SCARD_E_INSUFFICIENT_BUFFER;
+        }   
+
+        buf = dstBuf;     
     }
 
-    memcpy(*dstBuf, srcBuf, srcBufLen);
+    memcpy(buf, srcBuf, srcBufLen);
     
     *dstBufLen = srcBufLen;
     
