@@ -1450,6 +1450,11 @@ LONG SCardStatus(SCARDHANDLE hCard, LPSTR szReaderName,
 	*pcchReaderLen = 0;
 	*pcbAtrLen = 0;
 
+	if(rdp_ready) {
+		rv = Ogon_SCardStatus(hCard, szReaderName, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen);
+		goto end2;
+	}
+
 	/* Retry loop for blocking behaviour */
 retry:
 
@@ -1592,6 +1597,7 @@ end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 	(void)pthread_mutex_unlock(&readerStatesMutex);
 
+end2:
 	PROFILE_END(rv)
 
 	return rv;

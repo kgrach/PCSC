@@ -166,7 +166,8 @@ libpcsclite_real_src = [
   'src/winscard_msg.c',
   'src/thrift/gen-c_glib/ogon.c',
   'src/thrift/gen-c_glib/ogon_types.c',
-  'src/thrift/client.c'
+  'src/thrift/client.c',
+  'src/thrift/utils.c'
   ]
 library('pcsclite_real',
   libpcsclite_real_src,

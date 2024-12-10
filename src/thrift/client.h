@@ -23,10 +23,20 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol);
 
+LONG Ogon_SCardStatus(SCARDHANDLE hCard, 
+                      LPSTR szReaderName, 
+                      LPDWORD pcchReaderLen, 
+                      LPDWORD pdwState, 
+                      LPDWORD pdwProtocol, 
+                      LPBYTE pbAtr, 
+                      LPDWORD pcbAtrLen);                       
+
 LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext); 
 
 LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);
 
-LONG Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
+
+
 
 #endif

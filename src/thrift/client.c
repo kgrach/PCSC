@@ -9,6 +9,7 @@
 #include "gen-c_glib/ogon.h"
 #include "gen-c_glib/ogon_types.h"
 #include "client.h"
+#include "utils.h"
 
 static ThriftSocket     *socket     = NULL;
 static ThriftTransport  *transport  = NULL;
@@ -95,7 +96,6 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
     LPSTR_RPC Readers = NULL;
     DWORD_RPC chReaders = 0;
-    char *buf = NULL;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
@@ -103,7 +103,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                   "pcchReaders", &chReaders,
                   NULL);           
 
-    if(*mszReaders) {
+    /*if(*mszReaders) {
       
       if(*pcchReaders < chReaders) {
         ret = SCARD_E_INSUFFICIENT_BUFFER;
@@ -124,11 +124,17 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
     memcpy(*(char**)mszReaders, Readers, chReaders);
     
-    g_free (Readers);
-
     *pcchReaders = chReaders;
+    */
+
+    LONG err = Copy_WithMemAllocIfNeed(Readers, chReaders, (void**)mszReaders, pcchReaders);
+    
+    if(err) {
+      ret = err;
+    }
+    
+    g_free (Readers);
   }
-end:
 
   g_object_unref(ret_rpc);
 
@@ -164,7 +170,62 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
   return ret;
 }
 
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext){
+LONG Ogon_SCardStatus(SCARDHANDLE hCard, 
+                      LPSTR szReaderName, 
+                      LPDWORD pcchReaderLen, 
+                      LPDWORD pdwState, 
+                      LPDWORD pdwProtocol, 
+                      LPBYTE pbAtr, 
+                      LPDWORD pcbAtrLen) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
+  
+  if (ogon_if_status(client, &ret_rpc, hCard, &error)) {
+
+    DWORD_RPC dwState, dwProtocol;
+
+    LPSTR_RPC ReaderName = NULL;
+    DWORD_RPC ReaderNameLen = 0, AtrLen = 0;
+    GByteArray *Atr;
+
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "pdwState",  &dwState,
+                  "pdwProtocol", &dwProtocol,
+                  "szReaderName", &ReaderName,
+                  "pcchReaderLen", &ReaderNameLen,
+                  "pcbAtrLen", &AtrLen,
+                  "pbAtr", &Atr,
+                  NULL);     
+
+    *pdwState = dwState;
+    *pdwProtocol = dwProtocol;
+
+    LONG err = Copy_WithMemAllocIfNeed(ReaderName, ReaderNameLen, (void**)szReaderName, pcchReaderLen);
+    
+    if(err) {
+      ret = err;
+    }
+    
+    g_free (ReaderName);
+
+    err = Copy_WithMemAllocIfNeed(Atr->data, AtrLen, (void**)pbAtr, pcbAtrLen);
+    
+    if(err) {
+      ret = err;
+    }
+
+    g_byte_array_free (Atr, TRUE);
+
+  }
+
+  g_object_unref(ret_rpc);
+
+  return ret;
+}
+
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
@@ -200,8 +261,8 @@ LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   return ret;
 }
 
-LONG Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   
   if(pvMem)
-    free(pvMem);
+    free((void*)pvMem);
 }
