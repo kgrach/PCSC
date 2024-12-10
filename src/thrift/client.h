@@ -29,7 +29,15 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
                       LPDWORD pdwState, 
                       LPDWORD pdwProtocol, 
                       LPBYTE pbAtr, 
-                      LPDWORD pcbAtrLen);                       
+                      LPDWORD pcbAtrLen);    
+
+LONG Ogon_SCardTransmit(SCARDHANDLE hCard, 
+                        const SCARD_IO_REQUEST *pioSendPci,
+	                    LPCBYTE pbSendBuffer, 
+                        DWORD cbSendLength,
+	                    SCARD_IO_REQUEST *pioRecvPci, 
+                        LPBYTE pbRecvBuffer,
+	                    LPDWORD pcbRecvLength);
 
 LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext); 
 

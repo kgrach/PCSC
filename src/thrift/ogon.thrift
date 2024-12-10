@@ -38,11 +38,25 @@ struct return_s {
   7: DWORD_RPC          pcbAtrLen
 }
 
+struct scard_io_request_rpc {
+  1: LONG_RPC dwProtocol;	
+	2: LONG_RPC cbPciLength;
+}
+
+struct return_t {
+  1: LONG_RPC             retValue
+  2: scard_io_request_rpc pioRecvPci
+  3: LPBYTE_RPC           pbRecvBuffer
+  4: DWORD_RPC            pcbRecvLength
+}
+
+
 service ogon {
   return_ec  EstablishContext(1: DWORD_RPC dwScope)
   return_lr  ListReaders(1: SCARDCONTEXT_RPC hContext)
   return_c   Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
   return_s   Status(1: SCARDHANDLE_RPC hCard)
+  return_t   Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer)
 
   LONG_RPC   ReleaseContext(1: SCARDCONTEXT_RPC hContext)
   LONG_RPC   Disconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)

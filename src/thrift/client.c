@@ -225,12 +225,64 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
   return ret;
 }
 
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
+LONG Ogon_SCardTransmit(SCARDHANDLE hCard, 
+                        const SCARD_IO_REQUEST *pioSendPci,
+	                      LPCBYTE pbSendBuffer, 
+                        DWORD cbSendLength,
+	                      SCARD_IO_REQUEST *pioRecvPci, 
+                        LPBYTE pbRecvBuffer,
+	                      LPDWORD pcbRecvLength) {
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
-  //return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
+  return_t *ret_rpc = g_object_new(TYPE_RETURN_T, NULL);
+
+  scard_io_request_rpc *ioSendPCI = g_object_new(TYPE_SCARD_IO_REQUEST_RPC, NULL);
+
+  ioSendPCI->cbPciLength = pioSendPci->cbPciLength;
+  ioSendPCI->dwProtocol = pioSendPci->dwProtocol;
+
+  GByteArray *sendBuf = g_byte_array_new();
+  sendBuf = g_byte_array_append(sendBuf, pbSendBuffer, cbSendLength);
   
+  if (ogon_if_transmit(client, &ret_rpc, hCard, ioSendPCI, sendBuf, &error)) {
+
+    GByteArray *recvBuf = NULL;
+    scard_io_request_rpc *ioRecvPCI;
+    DWORD_RPC recvBufLen = 0;
+
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "pioRecvPci",  &ioRecvPCI,
+                  "pbRecvBuffer", &recvBuf,
+                  "pcbRecvLength", &recvBufLen,
+                  NULL);     
+
+    LONG err = Copy_WithMemAllocIfNeed(recvBuf->data, recvBufLen, (void**)pbRecvBuffer, pcbRecvLength);
+    
+    if(err) {
+      ret = err;
+    }
+
+    pioRecvPci->cbPciLength = ioRecvPCI->cbPciLength;
+    pioRecvPci->dwProtocol = ioRecvPCI->dwProtocol;
+
+    g_byte_array_free (recvBuf, TRUE);
+    g_object_unref(ioRecvPCI);
+  }
+  g_byte_array_free (sendBuf, TRUE);
+  
+  g_object_unref(ioSendPCI);
+  g_object_unref(ret_rpc);
+
+  return ret;
+
+}
+
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
+
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+ 
   if (ogon_if_release_context(client, &ret, hContext, &error)) {
 
     /*g_object_get(ret_rpc,
@@ -238,25 +290,19 @@ LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
                   NULL);                 */
   }
 
-  //g_object_unref(ret_rpc);
-
   return ret;
 }
 
 LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
-
-  //return_rc *ret_rpc = g_object_new(TYPE_RETURN_RC, NULL);
-    
+  
   if (ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error)) {
 
     /*g_object_get(ret_rpc,
                   "retValue", &ret,
                   NULL);                 */
   }
-
-  //g_object_unref(ret_rpc);
 
   return ret;
 }
