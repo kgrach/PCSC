@@ -39,6 +39,12 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
                         LPBYTE pbRecvBuffer,
 	                    LPDWORD pcbRecvLength);
 
+LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+                         DWORD dwShareMode,
+	                     DWORD dwPreferredProtocols, 
+                         DWORD dwInitialization,
+                         LPDWORD pdwActiveProtocol);
+
 LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext); 
 
 LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);

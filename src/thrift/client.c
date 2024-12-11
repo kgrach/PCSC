@@ -109,7 +109,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
       ret = err;
     }
     
-    g_free (Readers);
+    //g_free (Readers);
   }
 
   g_object_unref(ret_rpc);
@@ -183,7 +183,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
       ret = err;
     }
     
-    g_free (ReaderName);
+    //g_free (ReaderName);
 
     err = Copy_WithMemAllocIfNeed(Atr->data, Atr->len, (void**)pbAtr, pcbAtrLen);
     
@@ -191,7 +191,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
       ret = err;
     }
 
-    g_byte_array_free (Atr, TRUE);
+    //g_byte_array_free (Atr, TRUE);
 
   }
 
@@ -240,16 +240,38 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
     pioRecvPci->cbPciLength = ioRecvPCI->cbPciLength;
     pioRecvPci->dwProtocol = ioRecvPCI->dwProtocol;
 
-    g_byte_array_free (recvBuf, TRUE);
-    g_object_unref(ioRecvPCI);
+    //g_byte_array_free (recvBuf, TRUE);
+    //g_object_unref(ioRecvPCI);
   }
+
   g_byte_array_free (sendBuf, TRUE);
-  
   g_object_unref(ioSendPCI);
   g_object_unref(ret_rpc);
 
   return ret;
+}
 
+LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+                         DWORD dwShareMode,
+	                       DWORD dwPreferredProtocols, 
+                         DWORD dwInitialization,
+                         LPDWORD pdwActiveProtocol) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
+  
+  if (ogon_if_reconnect(client, &ret_rpc, hCard, dwShareMode, dwShareMode, dwPreferredProtocols, dwInitialization, &error)) {
+    
+    DWORD_RPC       activeProtocol;
+
+    g_object_get(ret_rpc,
+                  "retValue",  &ret,
+                  "pdwActiveProtocol", &activeProtocol,
+                  NULL);   
+    *pdwActiveProtocol = activeProtocol;
+  }
+
+  g_object_unref(ret_rpc);
 }
 
 LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
