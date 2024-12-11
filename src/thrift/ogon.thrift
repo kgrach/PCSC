@@ -53,18 +53,29 @@ struct return_r {
   2: DWORD_RPC          pdwActiveProtocol
 }
 
+struct scard_readerstate_rpc {
+  1:LPSTR_RPC     szReader
+  2:DWORD_RPC     dwCurrentState
+	3:DWORD_RPC     dwEventState
+  4:LPBYTE_RPC    rgbAtr
+} 
 
-service ogon {
-  return_ec  EstablishContext(1: DWORD_RPC dwScope)
-  LONG_RPC   ReleaseContext(1: SCARDCONTEXT_RPC hContext)
-
-  return_lr  ListReaders(1: SCARDCONTEXT_RPC hContext)
-  
-  return_c   Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
-  return_r   Reconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwShareMode, 3:DWORD_RPC dwPreferredProtocols, 4:DWORD_RPC dwInitialization)
-  LONG_RPC   Disconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)
-  
-  return_s   Status(1: SCARDHANDLE_RPC hCard)
-  return_t   Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer, 4: DWORD_RPC pcbRecvLength)
+struct return_gsc {
+  1: LONG_RPC                     retValue
+  2: list<scard_readerstate_rpc>  rgReaderStates
 }
 
+service ogon {
+  return_ec   EstablishContext(1: DWORD_RPC dwScope)
+  LONG_RPC    ReleaseContext(1: SCARDCONTEXT_RPC hContext)
+
+  return_lr   ListReaders(1: SCARDCONTEXT_RPC hContext)
+
+  return_c    Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
+  return_r    Reconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwShareMode, 3:DWORD_RPC dwPreferredProtocols, 4:DWORD_RPC dwInitialization)
+  LONG_RPC    Disconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)
+  
+  return_s    Status(1: SCARDHANDLE_RPC hCard)
+  return_gsc  GetStatusChange(1: SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwTimeout, 3:list<scard_readerstate_rpc> rgReaderStates,  4:DWORD_RPC cReaders)
+  return_t    Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer, 4: DWORD_RPC pcbRecvLength)
+}

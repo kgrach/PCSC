@@ -169,7 +169,7 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
 
   return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
   
-  if (ogon_if_reconnect(client, &ret_rpc, hCard, dwShareMode, dwShareMode, dwPreferredProtocols, dwInitialization, &error)) {
+  if (ogon_if_reconnect(client, &ret_rpc, hCard, dwShareMode, dwPreferredProtocols, dwInitialization, &error)) {
     
     DWORD_RPC       activeProtocol;
 
@@ -181,6 +181,8 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
   }
 
   g_object_unref(ret_rpc);
+
+  return ret;
 }
 
 LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
@@ -251,6 +253,84 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
   return ret;
 }
 
+LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext, 
+                               DWORD dwTimeout,	
+                               SCARD_READERSTATE *rgReaderStates, 
+                               DWORD cReaders) { 
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_gsc *ret_rpc = g_object_new(TYPE_RETURN_GSC, NULL);
+  
+  GPtrArray *inReaderStates = g_ptr_array_new();
+  
+  int i ;
+  
+  for(i = 0; i < cReaders; i++) {
+    
+    scard_readerstate_rpc *in_reader_state = g_object_new(TYPE_SCARD_READERSTATE_RPC, NULL);
+    GByteArray *atr = g_byte_array_new();
+    DWORD AtrSize = rgReaderStates->cbAtr > MAX_ATR_SIZE ? MAX_ATR_SIZE : rgReaderStates->cbAtr;
+
+    atr = g_byte_array_append(atr, &rgReaderStates->rgbAtr[0], AtrSize);
+
+    g_object_set(in_reader_state,
+                  "szReader",  rgReaderStates->szReader,
+                  "dwCurrentState", rgReaderStates->dwCurrentState,
+                  "dwEventState", rgReaderStates->dwEventState,
+                  "rgbAtr", atr,
+                  NULL);   
+
+    g_ptr_array_add(inReaderStates, in_reader_state);
+  }
+
+  if (ogon_if_get_status_change(client, &ret_rpc, hContext, dwTimeout, inReaderStates, cReaders, &error)) {
+    
+    GPtrArray *outReaderStates;
+
+    g_object_get(ret_rpc,
+                  "retValue",  &ret,
+                  "rgReaderStates", &outReaderStates,
+                  NULL);  
+
+    for(i = 0; i < cReaders; i++) {
+      scard_readerstate_rpc *out_reader_state = g_ptr_array_index(outReaderStates, i);
+
+      LPSTR_RPC    szReader;
+      DWORD_RPC    dwCurrentState;
+	    DWORD_RPC    dwEventState;
+      LPBYTE_RPC   rgbAtr;
+          
+      g_object_set(out_reader_state,
+                  "szReader",  &szReader,
+                  "dwCurrentState", &dwCurrentState,
+                  "dwEventState", &dwEventState,
+                  "rgbAtr", &rgbAtr,
+                  NULL);  
+      int j;
+      for(j = 0; j < cReaders; j++) {
+        
+        if(0 == strcmp(szReader, rgReaderStates[j].szReader)){
+          rgReaderStates[j].dwCurrentState = dwCurrentState;
+          rgReaderStates[j].dwEventState = dwEventState;
+          rgReaderStates[j].cbAtr = rgbAtr->len;
+          memcpy(rgReaderStates[j].rgbAtr, rgbAtr->data, rgbAtr->len);
+          break;
+        }
+      }
+    }
+  }
+
+  for(i = 0; i < cReaders; i++) {
+    scard_readerstate_rpc *in_reader_state = g_ptr_array_index(inReaderStates, i);
+    g_object_unref(in_reader_state); 
+  }
+
+  g_ptr_array_free(inReaderStates, TRUE);
+  g_object_unref(ret_rpc);
+
+  return ret;
+}
+
 LONG Ogon_SCardTransmit(SCARDHANDLE hCard, 
                         const SCARD_IO_REQUEST *pioSendPci,
 	                      LPCBYTE pbSendBuffer, 
@@ -301,6 +381,8 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
 
   return ret;
 }
+
+
 
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   

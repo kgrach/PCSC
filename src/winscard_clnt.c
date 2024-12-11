@@ -1732,6 +1732,11 @@ LONG SCardGetStatusChange(SCARDCONTEXT hContext, DWORD dwTimeout,
 	}
 #endif
 
+	if(rdp_ready) {
+		rv = Ogon_SCardGetStatusChange(hContext, dwTimeout,	rgReaderStates, cReaders);
+		goto end2;
+	}
+
 	if ((rgReaderStates == NULL && cReaders > 0)
 		|| (cReaders > PCSCLITE_MAX_READERS_CONTEXTS))
 	{
@@ -2196,6 +2201,7 @@ end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
 error:
+end2:
 	PROFILE_END(rv)
 #ifdef DO_TRACE
 	for (j=0; j<cReaders; j++)
