@@ -35,7 +35,6 @@ struct return_s {
   4: DWORD_RPC          pdwState
   5: DWORD_RPC          pdwProtocol
   6: LPBYTE_RPC         pbAtr
-  7: DWORD_RPC          pcbAtrLen
 }
 
 struct scard_io_request_rpc {
@@ -47,7 +46,6 @@ struct return_t {
   1: LONG_RPC             retValue
   2: scard_io_request_rpc pioRecvPci
   3: LPBYTE_RPC           pbRecvBuffer
-  4: DWORD_RPC            pcbRecvLength
 }
 
 

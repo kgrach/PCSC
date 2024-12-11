@@ -103,30 +103,6 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                   "pcchReaders", &chReaders,
                   NULL);           
 
-    /*if(*mszReaders) {
-      
-      if(*pcchReaders < chReaders) {
-        ret = SCARD_E_INSUFFICIENT_BUFFER;
-        goto end; 
-      } 
-              
-    } else {
-
-      buf = malloc(chReaders);
-      
-      if (NULL == buf) {
-        ret = SCARD_E_NO_MEMORY;
-        goto end;
-      }
-
-      *(char**)mszReaders = buf;
-    }
-
-    memcpy(*(char**)mszReaders, Readers, chReaders);
-    
-    *pcchReaders = chReaders;
-    */
-
     LONG err = Copy_WithMemAllocIfNeed(Readers, chReaders, (void**)mszReaders, pcchReaders);
     
     if(err) {
@@ -186,7 +162,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     DWORD_RPC dwState, dwProtocol;
 
     LPSTR_RPC ReaderName = NULL;
-    DWORD_RPC ReaderNameLen = 0, AtrLen = 0;
+    DWORD_RPC ReaderNameLen = 0;
     GByteArray *Atr;
 
     g_object_get(ret_rpc,
@@ -195,7 +171,6 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
                   "pdwProtocol", &dwProtocol,
                   "szReaderName", &ReaderName,
                   "pcchReaderLen", &ReaderNameLen,
-                  "pcbAtrLen", &AtrLen,
                   "pbAtr", &Atr,
                   NULL);     
 
@@ -210,7 +185,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     
     g_free (ReaderName);
 
-    err = Copy_WithMemAllocIfNeed(Atr->data, AtrLen, (void**)pbAtr, pcbAtrLen);
+    err = Copy_WithMemAllocIfNeed(Atr->data, Atr->len, (void**)pbAtr, pcbAtrLen);
     
     if(err) {
       ret = err;
@@ -249,16 +224,14 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
 
     GByteArray *recvBuf = NULL;
     scard_io_request_rpc *ioRecvPCI;
-    DWORD_RPC recvBufLen = 0;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
                   "pioRecvPci",  &ioRecvPCI,
                   "pbRecvBuffer", &recvBuf,
-                  "pcbRecvLength", &recvBufLen,
-                  NULL);     
+                   NULL);     
 
-    LONG err = Copy_WithMemAllocIfNeed(recvBuf->data, recvBufLen, (void**)pbRecvBuffer, pcbRecvLength);
+    LONG err = Copy_WithMemAllocIfNeed(recvBuf->data, recvBuf->len, (void**)pbRecvBuffer, pcbRecvLength);
     
     if(err) {
       ret = err;
