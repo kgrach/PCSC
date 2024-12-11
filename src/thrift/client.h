@@ -9,7 +9,9 @@ extern int rdp_ready;
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
-		                        LPSCARDCONTEXT phContext);                             
+		                        LPSCARDCONTEXT phContext);  
+
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext);                                                            
 
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
@@ -22,6 +24,14 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
                        DWORD dwPreferredProtocols, 
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol);
+
+LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+                         DWORD dwShareMode,
+	                     DWORD dwPreferredProtocols, 
+                         DWORD dwInitialization,
+                         LPDWORD pdwActiveProtocol);
+
+LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);
 
 LONG Ogon_SCardStatus(SCARDHANDLE hCard, 
                       LPSTR szReaderName, 
@@ -39,18 +49,11 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
                         LPBYTE pbRecvBuffer,
 	                    LPDWORD pcbRecvLength);
 
-LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
-                         DWORD dwShareMode,
-	                     DWORD dwPreferredProtocols, 
-                         DWORD dwInitialization,
-                         LPDWORD pdwActiveProtocol);
-
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext); 
-
-LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);
+LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext, 
+                               DWORD dwTimeout,	
+                               SCARD_READERSTATE *rgReaderStates, 
+                               DWORD cReaders);
 
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
-
-
 
 #endif

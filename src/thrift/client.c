@@ -83,6 +83,20 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
   return ret;
 }
 
+LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
+
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+ 
+  if (ogon_if_release_context(client, &ret, hContext, &error)) {
+
+    /*g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  NULL);                 */
+  }
+
+  return ret;
+}
+
 LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
 	                         LPSTR mszReaders, 
@@ -142,6 +156,43 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
   }
 
   g_object_unref(ret_rpc);
+
+  return ret;
+}
+
+LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+                         DWORD dwShareMode,
+	                       DWORD dwPreferredProtocols, 
+                         DWORD dwInitialization,
+                         LPDWORD pdwActiveProtocol) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
+  
+  if (ogon_if_reconnect(client, &ret_rpc, hCard, dwShareMode, dwShareMode, dwPreferredProtocols, dwInitialization, &error)) {
+    
+    DWORD_RPC       activeProtocol;
+
+    g_object_get(ret_rpc,
+                  "retValue",  &ret,
+                  "pdwActiveProtocol", &activeProtocol,
+                  NULL);   
+    *pdwActiveProtocol = activeProtocol;
+  }
+
+  g_object_unref(ret_rpc);
+}
+
+LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
+  
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+  
+  if (ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error)) {
+
+    /*g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  NULL);                 */
+  }
 
   return ret;
 }
@@ -247,57 +298,6 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
   g_byte_array_free (sendBuf, TRUE);
   g_object_unref(ioSendPCI);
   g_object_unref(ret_rpc);
-
-  return ret;
-}
-
-LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
-                         DWORD dwShareMode,
-	                       DWORD dwPreferredProtocols, 
-                         DWORD dwInitialization,
-                         LPDWORD pdwActiveProtocol) {
-  LONG ret = SCARD_F_INTERNAL_ERROR;
-
-  return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
-  
-  if (ogon_if_reconnect(client, &ret_rpc, hCard, dwShareMode, dwShareMode, dwPreferredProtocols, dwInitialization, &error)) {
-    
-    DWORD_RPC       activeProtocol;
-
-    g_object_get(ret_rpc,
-                  "retValue",  &ret,
-                  "pdwActiveProtocol", &activeProtocol,
-                  NULL);   
-    *pdwActiveProtocol = activeProtocol;
-  }
-
-  g_object_unref(ret_rpc);
-}
-
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
-
-  LONG ret = SCARD_F_INTERNAL_ERROR;
- 
-  if (ogon_if_release_context(client, &ret, hContext, &error)) {
-
-    /*g_object_get(ret_rpc,
-                  "retValue", &ret,
-                  NULL);                 */
-  }
-
-  return ret;
-}
-
-LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
-  
-  LONG ret = SCARD_F_INTERNAL_ERROR;
-  
-  if (ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error)) {
-
-    /*g_object_get(ret_rpc,
-                  "retValue", &ret,
-                  NULL);                 */
-  }
 
   return ret;
 }
