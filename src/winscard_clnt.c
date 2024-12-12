@@ -3323,6 +3323,11 @@ LONG SCardIsValidContext(SCARDCONTEXT hContext)
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardIsValidContext(hContext);
+		goto end2;
+	}
+
 	rv = SCARD_S_SUCCESS;
 
 	/*
@@ -3330,7 +3335,7 @@ LONG SCardIsValidContext(SCARDCONTEXT hContext)
 	 */
 	if (! SCardGetContextValidity(hContext))
 		rv = SCARD_E_INVALID_HANDLE;
-
+end2:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")
 

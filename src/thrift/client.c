@@ -469,6 +469,14 @@ LONG Ogon_SCardCancel(SCARDCONTEXT hContext) {
   return ret;
 }
 
+LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  ogon_if_is_valid_context(client, &ret, hContext, &error);
+
+  return ret;
+}
+
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   
   if(pvMem)

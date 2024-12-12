@@ -95,4 +95,5 @@ service ogon {
   return_ga   GetAttrib(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwAttrId, 3:DWORD_RPC pcbAttrLen);
   return_ctrl Control(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwControlCode, 3:LPVOID_RPC pbSendBuffer, 4:DWORD_RPC cbRecvLength)
   LONG_RPC    Cancel(1:SCARDCONTEXT_RPC hContext)
+  LONG_RPC    IsValidContext(1:SCARDCONTEXT_RPC hContext)
 }

@@ -70,6 +70,8 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
 
 LONG Ogon_SCardCancel(SCARDCONTEXT hContext);
 
+LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext);
+
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
 
 #endif
