@@ -28,7 +28,7 @@ void __attribute__((constructor)) start_client (void) {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.64",
+                            "hostname",  "192.168.1.60",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -307,11 +307,11 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
                   "rgbAtr", &rgbAtr,
                   NULL);  
       
-        rgReaderStates[j].dwCurrentState = dwCurrentState;
-        rgReaderStates[j].dwEventState = dwEventState;
-        rgReaderStates[j].cbAtr = rgbAtr->len;
-        memcpy(rgReaderStates[j].rgbAtr, rgbAtr->data, rgbAtr->len);
-      }
+      rgReaderStates[i].dwCurrentState = dwCurrentState;
+      rgReaderStates[i].dwEventState = dwEventState;
+      rgReaderStates[i].cbAtr = rgbAtr->len;
+      memcpy(rgReaderStates[i].rgbAtr, rgbAtr->data, rgbAtr->len);
+      
     }
   }
 
