@@ -6,6 +6,7 @@ typedef string  LPSTR_RPC;
 typedef string  LPCSTR_RPC;
 typedef i64     SCARDHANDLE_RPC;
 typedef binary  LPBYTE_RPC
+typedef binary  LPVOID_RPC
 
 struct return_ec {
   1: LONG_RPC           retValue
@@ -70,6 +71,11 @@ struct return_ga {
   2: LPBYTE_RPC   pbAttr
 }
 
+struct return_ctrl {
+  1: LONG_RPC     retValue
+  2: LPVOID_RPC   pbRecvBuffer
+}
+
 service ogon {
   return_ec   EstablishContext(1: DWORD_RPC dwScope)
   LONG_RPC    ReleaseContext(1: SCARDCONTEXT_RPC hContext)
@@ -87,5 +93,5 @@ service ogon {
   LONG_RPC    EndTransaction(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)
 
   return_ga   GetAttrib(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwAttrId, 3:DWORD_RPC pcbAttrLen);
+  return_ctrl Control(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwControlCode, 3:LPVOID_RPC pbSendBuffer, 4:DWORD_RPC cbRecvLength)
 }
-

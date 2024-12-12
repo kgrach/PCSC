@@ -28,7 +28,7 @@ void __attribute__((constructor)) start_client (void) {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.60",
+                            "hostname",  "192.168.1.64",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -419,6 +419,46 @@ LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWO
   g_object_unref(ret_rpc);
 
   return ret;
+}
+
+LONG Ogon_SCardControl(SCARDHANDLE hCard, 
+                       DWORD dwControlCode, 
+                       LPCVOID pbSendBuffer,
+                       DWORD cbSendLength, 
+                       LPVOID pbRecvBuffer, 
+                       DWORD cbRecvLength,
+                       LPDWORD lpBytesReturned) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_ctrl *ret_rpc = g_object_new(TYPE_RETURN_CTRL, NULL);
+
+  GByteArray *sendBuf = g_byte_array_new();
+  sendBuf = g_byte_array_append(sendBuf, pbSendBuffer, cbSendLength); 
+  
+  if (ogon_if_control(client, &ret_rpc, hCard, dwControlCode, sendBuf, cbRecvLength, &error)) {
+
+    GByteArray *recvBuf;
+
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "pbRecvBuffer", &recvBuf,
+                  NULL);     
+    
+    LONG err;
+
+    if(SCARD_S_SUCCESS == ret) {
+      *lpBytesReturned = cbRecvLength;
+      err = Copy_WithMemAllocIfNeed(recvBuf->data, recvBuf->len, (void**)pbRecvBuffer, lpBytesReturned);
+      if(err){
+        ret = err;
+      }
+    }
+  }
+
+  g_byte_array_free (sendBuf, TRUE);
+  g_object_unref(ret_rpc);
+
+  return ret;                                             
 }
 
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPVOID pvMem) {

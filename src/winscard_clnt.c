@@ -2291,6 +2291,11 @@ LONG SCardControl(SCARDHANDLE hCard, DWORD dwControlCode, LPCVOID pbSendBuffer,
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		rv = Ogon_SCardControl(hCard, dwControlCode, pbSendBuffer, cbSendLength, pbRecvBuffer, cbRecvLength, lpBytesReturned);
+		goto end2;
+	}
+
 	/* 0 bytes received by default */
 	if (NULL != lpBytesReturned)
 		*lpBytesReturned = 0;
@@ -2367,7 +2372,7 @@ LONG SCardControl(SCARDHANDLE hCard, DWORD dwControlCode, LPCVOID pbSendBuffer,
 
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
-
+end2:
 	PROFILE_END(rv)
 
 	return rv;
