@@ -306,16 +306,11 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
                   "dwEventState", &dwEventState,
                   "rgbAtr", &rgbAtr,
                   NULL);  
-      int j;
-      for(j = 0; j < cReaders; j++) {
-        
-        if(0 == strcmp(szReader, rgReaderStates[j].szReader)){
-          rgReaderStates[j].dwCurrentState = dwCurrentState;
-          rgReaderStates[j].dwEventState = dwEventState;
-          rgReaderStates[j].cbAtr = rgbAtr->len;
-          memcpy(rgReaderStates[j].rgbAtr, rgbAtr->data, rgbAtr->len);
-          break;
-        }
+      
+        rgReaderStates[j].dwCurrentState = dwCurrentState;
+        rgReaderStates[j].dwEventState = dwEventState;
+        rgReaderStates[j].cbAtr = rgbAtr->len;
+        memcpy(rgReaderStates[j].rgbAtr, rgbAtr->data, rgbAtr->len);
       }
     }
   }
