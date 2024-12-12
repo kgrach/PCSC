@@ -1183,6 +1183,11 @@ LONG SCardBeginTransaction(SCARDHANDLE hCard)
 	PROFILE_START
 	API_TRACE_IN("%ld", hCard)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardBeginTransaction(hCard);
+		goto end2;
+	}
+
 	/*
 	 * Query the server every so often until the sharing violation ends
 	 * and then hold the lock for yourself.
@@ -1228,6 +1233,7 @@ LONG SCardBeginTransaction(SCARDHANDLE hCard)
 
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
+end2:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")
 

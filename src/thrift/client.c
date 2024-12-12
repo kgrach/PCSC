@@ -377,7 +377,13 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
   return ret;
 }
 
+LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+  
+  ogon_if_begin_transaction(client, &ret, hCard, &error);
 
+  return ret;
+}
 
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   
