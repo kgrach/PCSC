@@ -68,6 +68,7 @@ struct return_gsc {
 struct return_ga {
   1: LONG_RPC     retValue
   2: LPBYTE_RPC   pbAttr
+  3: LONG_RPC     freeMemPtr
 }
 
 service ogon {
