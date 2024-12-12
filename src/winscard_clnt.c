@@ -984,6 +984,11 @@ LONG SCardReconnect(SCARDHANDLE hCard, DWORD dwShareMode,
 	PROFILE_START
 	API_TRACE_IN("%ld %ld %ld", hCard, dwShareMode, dwPreferredProtocols)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardReconnect(hCard, dwShareMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocol);
+		goto end2;
+	}
+
 	if (pdwActiveProtocol == NULL)
 		return SCARD_E_INVALID_PARAMETER;
 
@@ -1033,7 +1038,7 @@ retry:
 
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
-
+end2:
 	PROFILE_END(rv)
 	API_TRACE_OUT("%ld", *pdwActiveProtocol)
 
