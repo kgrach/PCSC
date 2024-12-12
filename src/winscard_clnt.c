@@ -3232,6 +3232,11 @@ LONG SCardCancel(SCARDCONTEXT hContext)
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardCancel(hContext);
+		goto end2;
+	}
+
 	/*
 	 * Make sure this context has been opened
 	 */
@@ -3280,7 +3285,7 @@ LONG SCardCancel(SCARDCONTEXT hContext)
 	rv = scCancelStruct.rv;
 end:
 	ClientCloseSession(dwClientID);
-
+end2:
 error:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")

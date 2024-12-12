@@ -461,7 +461,15 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
   return ret;                                             
 }
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPVOID pvMem) {
+LONG Ogon_SCardCancel(SCARDCONTEXT hContext) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  ogon_if_cancel(client, &ret, hContext, &error);
+
+  return ret;
+}
+
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   
   if(pvMem)
     free((void*)pvMem);

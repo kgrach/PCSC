@@ -68,6 +68,8 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
                        DWORD cbRecvLength,
                        LPDWORD lpBytesReturned);
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPVOID pvMem);
+LONG Ogon_SCardCancel(SCARDCONTEXT hContext);
+
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
 
 #endif
