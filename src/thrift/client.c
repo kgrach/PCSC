@@ -210,7 +210,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
 
   return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
   
-  if (ogon_if_status(client, &ret_rpc, hCard, &error)) {
+  if (ogon_if_status(client, &ret_rpc, hCard, *pcchReaderLen, *pcbAtrLen, &error)) {
 
     DWORD_RPC dwState, dwProtocol;
 
@@ -230,22 +230,21 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     *pdwState = dwState;
     *pdwProtocol = dwProtocol;
 
-    LONG err = Copy_WithMemAllocIfNeed(ReaderName, ReaderNameLen, (void**)szReaderName, pcchReaderLen);
-    
-    if(err) {
-      ret = err;
-    }
-    
-    //g_free (ReaderName);
+    LONG err;
 
-    err = Copy_WithMemAllocIfNeed(Atr->data, Atr->len, (void**)pbAtr, pcbAtrLen);
-    
-    if(err) {
-      ret = err;
+    if(SCARD_S_SUCCESS == ret) {
+      err = Copy_WithMemAllocIfNeed(ReaderName, ReaderNameLen, (void**)szReaderName, pcchReaderLen);
+      if(err){
+        ret = err;
+      }
     }
 
-    //g_byte_array_free (Atr, TRUE);
-
+    if(SCARD_S_SUCCESS == ret) {
+      err = Copy_WithMemAllocIfNeed(Atr->data, Atr->len, (void**)pbAtr, pcbAtrLen);
+      if(err){
+        ret = err;
+      }
+    }
   }
 
   g_object_unref(ret_rpc);
