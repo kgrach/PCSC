@@ -1289,6 +1289,11 @@ LONG SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition)
 	PROFILE_START
 	API_TRACE_IN("%ld", hCard)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardEndTransaction( hCard, dwDisposition);
+		goto end2;
+	}
+
 	/*
 	 * Make sure this handle has been opened
 	 */
@@ -1321,7 +1326,7 @@ LONG SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition)
 
 end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
-
+end2:
 	PROFILE_END(rv)
 	API_TRACE_OUT("")
 

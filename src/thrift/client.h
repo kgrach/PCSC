@@ -56,6 +56,8 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
 
 LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard);
 
+LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition);
+
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
 
 #endif

@@ -311,7 +311,6 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
       rgReaderStates[i].dwEventState = dwEventState;
       rgReaderStates[i].cbAtr = rgbAtr->len;
       memcpy(rgReaderStates[i].rgbAtr, rgbAtr->data, rgbAtr->len);
-      
     }
   }
 
@@ -379,8 +378,16 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
 
 LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
-  
+
   ogon_if_begin_transaction(client, &ret, hCard, &error);
+
+  return ret;
+}
+
+LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition) {
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  ogon_if_end_transaction(client, &ret, hCard, dwDisposition, &error);
 
   return ret;
 }
