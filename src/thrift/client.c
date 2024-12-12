@@ -300,7 +300,7 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
 	    DWORD_RPC    dwEventState;
       LPBYTE_RPC   rgbAtr;
           
-      g_object_set(out_reader_state,
+      g_object_get(out_reader_state,
                   "szReader",  &szReader,
                   "dwCurrentState", &dwCurrentState,
                   "dwEventState", &dwEventState,
