@@ -422,7 +422,7 @@ LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWO
   return ret;
 }
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPVOID pvMem) {
   
   if(pvMem)
     free((void*)pvMem);

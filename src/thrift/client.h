@@ -60,6 +60,6 @@ LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition);
 
 LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen);
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
+void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPVOID pvMem);
 
 #endif
