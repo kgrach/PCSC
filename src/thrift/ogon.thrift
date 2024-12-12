@@ -65,6 +65,11 @@ struct return_gsc {
   2: list<scard_readerstate_rpc>  rgReaderStates
 }
 
+struct return_ga {
+  1: LONG_RPC     retValue
+  2: LPBYTE_RPC   pbAttr
+}
+
 service ogon {
   return_ec   EstablishContext(1: DWORD_RPC dwScope)
   LONG_RPC    ReleaseContext(1: SCARDCONTEXT_RPC hContext)
@@ -80,5 +85,7 @@ service ogon {
   return_t    Transmit(1: SCARDHANDLE_RPC hCard, 2:scard_io_request_rpc pioSendPci, 3:LPBYTE_RPC pbSendBuffer, 4: DWORD_RPC pcbRecvLength)
   LONG_RPC    BeginTransaction(1:SCARDHANDLE_RPC hCard)
   LONG_RPC    EndTransaction(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwDisposition)
+
+  return_ga   GetAttrib(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwAttrId, 3:DWORD_RPC pcbAttrLen);
 }
 

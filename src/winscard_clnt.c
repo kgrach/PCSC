@@ -2499,6 +2499,11 @@ LONG SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr,
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		ret = Ogon_SCardGetAttrib(hCard, dwAttrId, pbAttr, pcbAttrLen);
+		goto end2;
+	}
+
 	if (NULL == pcbAttrLen)
 	{
 		ret = SCARD_E_INVALID_PARAMETER;
@@ -2534,6 +2539,7 @@ LONG SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr,
 		pcbAttrLen);
 
 end:
+end2:
 	PROFILE_END(ret)
 
 	return ret;

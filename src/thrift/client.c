@@ -392,6 +392,36 @@ LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition) {
   return ret;
 }
 
+LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen) {
+  
+  LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_ga *ret_rpc = g_object_new(TYPE_RETURN_GA, NULL);
+  
+  if (ogon_if_get_attrib(client, &ret_rpc, hCard, dwAttrId, *pcbAttrLen, &error)) {
+
+    GByteArray *Attr;
+
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "pbAttr", &Attr,
+                  NULL);     
+    
+    LONG err;
+
+    if(SCARD_S_SUCCESS == ret) {
+      err = Copy_WithMemAllocIfNeed(Attr->data, Attr->len, (void**)pbAttr, pcbAttrLen);
+      if(err){
+        ret = err;
+      }
+    }
+  }
+
+  g_object_unref(ret_rpc);
+
+  return ret;
+}
+
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
   
   if(pvMem)
