@@ -106,7 +106,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
   
-  if (ogon_if_list_readers(client, &ret_rpc, hContext, &error)) {
+  if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
 
     LPSTR_RPC Readers = NULL;
     DWORD_RPC chReaders = 0;
@@ -115,15 +115,17 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                   "retValue", &ret,
                   "mszReaders",  &Readers,
                   "pcchReaders", &chReaders,
-                  NULL);           
+                  NULL); 
 
-    LONG err = Copy_WithMemAllocIfNeed(Readers, chReaders, (void**)mszReaders, pcchReaders);
-    
-    if(err) {
-      ret = err;
-    }
-    
-    //g_free (Readers);
+        LONG err;
+
+    if(SCARD_S_SUCCESS == ret) {
+      err = Copy_WithMemAllocIfNeed(Readers, chReaders, (void**)mszReaders, pcchReaders);
+      if(err){
+        ret = err;
+      }
+    }          
+
   }
 
   g_object_unref(ret_rpc);

@@ -86,7 +86,7 @@ service ogon {
   return_ec   EstablishContext(1: DWORD_RPC dwScope)
   LONG_RPC    ReleaseContext(1: SCARDCONTEXT_RPC hContext)
 
-  return_lr   ListReaders(1: SCARDCONTEXT_RPC hContext)
+  return_lr   ListReaders(1: SCARDCONTEXT_RPC hContext, 2: DWORD_RPC pcchReaders)
   return_lrg  ListReaderGroups(1: SCARDCONTEXT_RPC hContext, 2: DWORD_RPC pcchGroups)
 
   return_c    Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
