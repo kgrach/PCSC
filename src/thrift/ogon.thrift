@@ -20,13 +20,11 @@ struct return_rc {
 struct return_lr {
   1: LONG_RPC         retValue
   2: LPSTR_RPC        mszReaders
-  3: DWORD_RPC        pcchReaders
 }
 
 struct return_lrg {
   1: LONG_RPC         retValue
   2: LPSTR_RPC        mszGroups
-  3: DWORD_RPC        pcchGroups
 }
 
 struct return_c {
@@ -38,7 +36,6 @@ struct return_c {
 struct return_s {
   1: LONG_RPC           retValue
   2: LPSTR_RPC          szReaderName
-  3: DWORD_RPC          pcchReaderLen
   4: DWORD_RPC          pdwState
   5: DWORD_RPC          pdwProtocol
   6: LPBYTE_RPC         pbAtr

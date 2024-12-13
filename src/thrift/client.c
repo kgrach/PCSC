@@ -109,18 +109,19 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
 
     LPSTR_RPC Readers = NULL;
-    DWORD_RPC chReaders = 0;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
                   "mszReaders",  &Readers,
-                  "pcchReaders", &chReaders,
                   NULL); 
 
-        LONG err;
+    LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
-      err = Copy_WithMemAllocIfNeed(Readers, chReaders, (void**)mszReaders, pcchReaders);
+
+      DWORD ReadersLen = strlen(Readers) + 1;
+
+      err = Copy_WithMemAllocIfNeed(Readers, ReadersLen, (void**)mszReaders, pcchReaders);
       if(err){
         ret = err;
       }
@@ -143,17 +144,16 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
   if (ogon_if_list_reader_groups(client, &ret_rpc, hContext, *pcchGroups, &error)) {
 
     LPSTR_RPC Groups = NULL;
-    DWORD_RPC chGroupsLen = 0;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
                   "mszGroups",  &Groups,
-                  "pcchGroups", &chGroupsLen,
                   NULL);           
     LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
-      err = Copy_WithMemAllocIfNeed(Groups, chGroupsLen, (void**)mszGroups, pcchGroups);
+      DWORD GroupsLen = strlen(Groups) + 1;
+      err = Copy_WithMemAllocIfNeed(Groups, GroupsLen, (void**)mszGroups, pcchGroups);
       if(err){
         ret = err;
       }
@@ -223,12 +223,7 @@ LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
   
-  if (ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error)) {
-
-    /*g_object_get(ret_rpc,
-                  "retValue", &ret,
-                  NULL);                 */
-  }
+  ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error);
 
   return ret;
 }
@@ -249,7 +244,6 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     DWORD_RPC dwState, dwProtocol;
 
     LPSTR_RPC ReaderName = NULL;
-    DWORD_RPC ReaderNameLen = 0;
     GByteArray *Atr;
 
     g_object_get(ret_rpc,
@@ -257,7 +251,6 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
                   "pdwState",  &dwState,
                   "pdwProtocol", &dwProtocol,
                   "szReaderName", &ReaderName,
-                  "pcchReaderLen", &ReaderNameLen,
                   "pbAtr", &Atr,
                   NULL);     
 
@@ -267,6 +260,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
+      DWORD ReaderNameLen = strlen(ReaderName) + 1;
       err = Copy_WithMemAllocIfNeed(ReaderName, ReaderNameLen, (void**)szReaderName, pcchReaderLen);
       if(err){
         ret = err;
