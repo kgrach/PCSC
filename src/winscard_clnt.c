@@ -3140,6 +3140,11 @@ LONG SCardListReaderGroups(SCARDCONTEXT hContext, LPSTR mszGroups,
 
 	PROFILE_START
 
+	if(rdp_ready) {
+		rv = Ogon_SCardListReaderGroups(hContext, mszGroups, pcchGroups);
+		goto end2;
+	}
+
 	/* Multi-string with two trailing \0 */
 	const char ReaderGroup[] = "SCard$DefaultReaders\0";
 	const unsigned int dwGroups = sizeof(ReaderGroup);
@@ -3185,6 +3190,7 @@ end:
 
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
+end2:
 	PROFILE_END(rv)
 
 	return rv;

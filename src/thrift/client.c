@@ -131,6 +131,38 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   return ret;
 }
 
+LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext, 
+                                LPSTR mszGroups, 
+                                LPDWORD pcchGroups) {
+ LONG ret = SCARD_F_INTERNAL_ERROR;
+
+  return_lrg *ret_rpc = g_object_new(TYPE_RETURN_LRG, NULL);
+  
+  if (ogon_if_list_reader_groups(client, &ret_rpc, hContext, *pcchGroups, &error)) {
+
+    LPSTR_RPC Groups = NULL;
+    DWORD_RPC chGroupsLen = 0;
+
+    g_object_get(ret_rpc,
+                  "retValue", &ret,
+                  "mszGroups",  &Groups,
+                  "pcchGroups", &chGroupsLen,
+                  NULL);           
+    LONG err;
+
+    if(SCARD_S_SUCCESS == ret) {
+      err = Copy_WithMemAllocIfNeed(Groups, chGroupsLen, (void**)mszGroups, pcchGroups);
+      if(err){
+        ret = err;
+      }
+    }
+  }
+
+  g_object_unref(ret_rpc);
+
+  return ret;
+}
+
 LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
                        LPCSTR szReader,
 	                     DWORD dwShareMode, 

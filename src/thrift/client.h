@@ -17,6 +17,10 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                            LPCSTR mszGroups,
 	                       LPSTR mszReaders, 
                            LPDWORD pcchReaders); 
+
+LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext, 
+                                LPSTR mszGroups, 
+                                LPDWORD pcchGroups);
                            
 LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
                        LPCSTR szReader,

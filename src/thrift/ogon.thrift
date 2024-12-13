@@ -23,6 +23,12 @@ struct return_lr {
   3: DWORD_RPC        pcchReaders
 }
 
+struct return_lrg {
+  1: LONG_RPC         retValue
+  2: LPSTR_RPC        mszGroups
+  3: DWORD_RPC        pcchGroups
+}
+
 struct return_c {
   1: LONG_RPC           retValue
   2: SCARDHANDLE_RPC    phCard
@@ -81,6 +87,7 @@ service ogon {
   LONG_RPC    ReleaseContext(1: SCARDCONTEXT_RPC hContext)
 
   return_lr   ListReaders(1: SCARDCONTEXT_RPC hContext)
+  return_lrg  ListReaderGroups(1: SCARDCONTEXT_RPC hContext, 2: DWORD_RPC pcchGroups)
 
   return_c    Connect(1: SCARDCONTEXT_RPC hContext, 2: LPCSTR_RPC szReader, 3:DWORD_RPC dwShareMode, 4: DWORD_RPC dwPreferredProtocols)
   return_r    Reconnect(1:SCARDHANDLE_RPC hCard, 2:DWORD_RPC dwShareMode, 3:DWORD_RPC dwPreferredProtocols, 4:DWORD_RPC dwInitialization)
