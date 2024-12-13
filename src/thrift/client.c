@@ -108,7 +108,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   
   if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
 
-    LPSTR_RPC Readers = NULL;
+    GByteArray *Readers;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
@@ -119,9 +119,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
 
     if(SCARD_S_SUCCESS == ret) {
 
-      DWORD ReadersLen = strlen(Readers) + 1;
-
-      err = Copy_WithMemAllocIfNeed(Readers, ReadersLen, (void**)mszReaders, pcchReaders);
+      err = Copy_WithMemAllocIfNeed(Readers->data, Readers->len, (void**)mszReaders, pcchReaders);
       if(err){
         ret = err;
       }
@@ -143,7 +141,7 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
   
   if (ogon_if_list_reader_groups(client, &ret_rpc, hContext, *pcchGroups, &error)) {
 
-    LPSTR_RPC Groups = NULL;
+    GByteArray *Groups;
 
     g_object_get(ret_rpc,
                   "retValue", &ret,
@@ -152,8 +150,7 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
     LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
-      DWORD GroupsLen = strlen(Groups) + 1;
-      err = Copy_WithMemAllocIfNeed(Groups, GroupsLen, (void**)mszGroups, pcchGroups);
+      err = Copy_WithMemAllocIfNeed(Groups->data, Groups->len, (void**)mszGroups, pcchGroups);
       if(err){
         ret = err;
       }
@@ -243,7 +240,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
 
     DWORD_RPC dwState, dwProtocol;
 
-    LPSTR_RPC ReaderName = NULL;
+    GByteArray *ReaderName;
     GByteArray *Atr;
 
     g_object_get(ret_rpc,
@@ -260,8 +257,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
     LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
-      DWORD ReaderNameLen = strlen(ReaderName) + 1;
-      err = Copy_WithMemAllocIfNeed(ReaderName, ReaderNameLen, (void**)szReaderName, pcchReaderLen);
+      err = Copy_WithMemAllocIfNeed(ReaderName->data, ReaderName->len, (void**)szReaderName, pcchReaderLen);
       if(err){
         ret = err;
       }
@@ -322,13 +318,13 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
     for(i = 0; i < cReaders; i++) {
       scard_readerstate_rpc *out_reader_state = g_ptr_array_index(outReaderStates, i);
 
-      LPSTR_RPC    szReader;
+      //LPSTR_RPC    szReader;
       DWORD_RPC    dwCurrentState;
 	    DWORD_RPC    dwEventState;
       LPBYTE_RPC   rgbAtr;
           
       g_object_get(out_reader_state,
-                  "szReader",  &szReader,
+                  //"szReader",  &szReader,
                   "dwCurrentState", &dwCurrentState,
                   "dwEventState", &dwEventState,
                   "rgbAtr", &rgbAtr,
