@@ -89,6 +89,13 @@ int main(int argc, char *argv[])
 	rv = SCardListReaders(hContext, NULL, (LPSTR)&mszReaders, &dwReaders);
 	PCSC_ERROR(rv, "SCardListReaders")
 
+
+
+	char pbReader2[MAX_READERNAME] = "";
+	DWORD dwReaders2 = sizeof(pbReader2);
+	rv = SCardListReaders(hContext, NULL, pbReader2, &dwReaders2);
+	PCSC_ERROR(rv, "SCardListReaders")
+
 	/* Extract readers from the null separated string and get the total
 	 * number of readers */
 	nbReaders = 0;

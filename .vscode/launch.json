@@ -39,7 +39,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/builddir/pcsc_demo",
             "args": [],
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "cwd": "${workspaceFolder}/builddir/",
             "environment": [],
             "externalConsole": false,

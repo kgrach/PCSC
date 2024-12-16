@@ -8,17 +8,18 @@ export PCSCLITE_DEBUG=0
 
 
 ---- Need to do ----
-SCardIsValidContext
------------ Doing ----------------> SCardBeginTransaction
-SCardEndTransaction
 
-SCardControl
-SCardListReaderGroups
-SCardCancel
-SCardGetAttrib
+
 SCardSetAttrib
 
 ---- Done ----
+SCardListReaderGroups
+SCardIsValidContext
+SCardCancel
+SCardControl
+SCardGetAttrib
+SCardBeginTransaction
+SCardEndTransaction
 SCardGetStatusChange
 SCardEstablishContext
 SCardReleaseContext

@@ -5,6 +5,7 @@
 
 #include <glib-object.h>
 #include <glib.h>
+#include <stdio.h>
 
 #include "gen-c_glib/ogon.h"
 #include "gen-c_glib/ogon_types.h"
@@ -28,7 +29,7 @@ void __attribute__((constructor)) start_client (void) {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.64",
+                            "hostname",  "192.168.1.124",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -104,6 +105,26 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
     
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
+  return_lr *ret_lr = g_object_new(TYPE_RETURN_LR, NULL);
+
+  if (success && ogon_if_list_readers(client, &ret_lr, hContext, *pcchReaders, &error)) {
+
+    long retVal, context;
+    GByteArray *buf;
+    g_object_get(ret_lr,
+                  "retValue", &retVal,
+                  "mszReaders", &buf,
+                  NULL);
+
+    printf("Server reply: retValue=%ld\n", retVal);   
+
+    ret = retVal;       
+  }
+
+  g_object_unref(ret_lr);
+
+  abc 
+  /*
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
   
   if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
@@ -123,11 +144,15 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
       if(err){
         ret = err;
       }
-    }          
+    }
+    printf ("Client caught an exception: %s\n", error->message);
+  }*/
 
-  }
+  
+  
+  //g_clear_error (&error);
 
-  g_object_unref(ret_rpc);
+  //g_object_unref(ret_rpc);
 
   return ret;
 }
