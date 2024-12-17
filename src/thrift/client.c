@@ -390,9 +390,10 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
       ret = err;
     }
 
-    pioRecvPci->cbPciLength = ioRecvPCI->cbPciLength;
-    pioRecvPci->dwProtocol = ioRecvPCI->dwProtocol;
-
+    if(pioRecvPci) {
+      pioRecvPci->cbPciLength = ioRecvPCI->cbPciLength;
+      pioRecvPci->dwProtocol = ioRecvPCI->dwProtocol;
+    }
     //g_byte_array_free (recvBuf, TRUE);
     //g_object_unref(ioRecvPCI);
   }
