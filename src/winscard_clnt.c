@@ -821,6 +821,10 @@ LONG SCardConnect(SCARDCONTEXT hContext, LPCSTR szReader,
 	PROFILE_START
 	API_TRACE_IN("%ld %s %ld %ld", hContext, szReader, dwShareMode, dwPreferredProtocols)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols, phCard, pdwActiveProtocol);
+		goto end2;
+	}
 	/*
 	 * Check for NULL parameters
 	 */
@@ -837,11 +841,6 @@ LONG SCardConnect(SCARDCONTEXT hContext, LPCSTR szReader,
 	 */
 	if (strlen(szReader) > MAX_READERNAME)
 		return SCARD_E_INVALID_VALUE;
-
-	if(rdp_ready) {
-		rv = Ogon_SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols, phCard, pdwActiveProtocol);
-		goto end2;
-	}
 
 	/*
 	 * Make sure this context has been opened

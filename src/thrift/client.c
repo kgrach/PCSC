@@ -104,27 +104,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                            LPDWORD pcchReaders) {
     
   LONG ret = SCARD_F_INTERNAL_ERROR;
-
-  return_lr *ret_lr = g_object_new(TYPE_RETURN_LR, NULL);
-
-  if (success && ogon_if_list_readers(client, &ret_lr, hContext, *pcchReaders, &error)) {
-
-    long retVal, context;
-    GByteArray *buf;
-    g_object_get(ret_lr,
-                  "retValue", &retVal,
-                  "mszReaders", &buf,
-                  NULL);
-
-    printf("Server reply: retValue=%ld\n", retVal);   
-
-    ret = retVal;       
-  }
-
-  g_object_unref(ret_lr);
-
-  abc 
-  /*
+  
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
   
   if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
@@ -145,14 +125,14 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
         ret = err;
       }
     }
-    printf ("Client caught an exception: %s\n", error->message);
-  }*/
+    //printf ("Client caught an exception: %s\n", error->message);
+  }
 
   
   
   //g_clear_error (&error);
 
-  //g_object_unref(ret_rpc);
+  g_object_unref(ret_rpc);
 
   return ret;
 }
@@ -316,16 +296,16 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
   for(i = 0; i < cReaders; i++) {
     
     scard_readerstate_rpc *in_reader_state = g_object_new(TYPE_SCARD_READERSTATE_RPC, NULL);
-    GByteArray *atr = g_byte_array_new();
-    DWORD AtrSize = rgReaderStates->cbAtr > MAX_ATR_SIZE ? MAX_ATR_SIZE : rgReaderStates->cbAtr;
+    //GByteArray *atr = g_byte_array_new();
+    //DWORD AtrSize = rgReaderStates->cbAtr > MAX_ATR_SIZE ? MAX_ATR_SIZE : rgReaderStates->cbAtr;
 
-    atr = g_byte_array_append(atr, &rgReaderStates->rgbAtr[0], AtrSize);
+    //atr = g_byte_array_append(atr, &rgReaderStates->rgbAtr[0], AtrSize);
 
     g_object_set(in_reader_state,
                   "szReader",  rgReaderStates->szReader,
                   "dwCurrentState", rgReaderStates->dwCurrentState,
-                  "dwEventState", rgReaderStates->dwEventState,
-                  "rgbAtr", atr,
+                  //"dwEventState", 0,
+                  //"rgbAtr", NULL,
                   NULL);   
 
     g_ptr_array_add(inReaderStates, in_reader_state);
@@ -343,19 +323,19 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
     for(i = 0; i < cReaders; i++) {
       scard_readerstate_rpc *out_reader_state = g_ptr_array_index(outReaderStates, i);
 
-      //LPSTR_RPC    szReader;
-      DWORD_RPC    dwCurrentState;
+      LPSTR_RPC    szReader;
+      //DWORD_RPC    dwCurrentState;
 	    DWORD_RPC    dwEventState;
       LPBYTE_RPC   rgbAtr;
           
       g_object_get(out_reader_state,
-                  //"szReader",  &szReader,
-                  "dwCurrentState", &dwCurrentState,
+                  "szReader",  &szReader,
+                  //"dwCurrentState", &dwCurrentState,
                   "dwEventState", &dwEventState,
                   "rgbAtr", &rgbAtr,
                   NULL);  
       
-      rgReaderStates[i].dwCurrentState = dwCurrentState;
+      //rgReaderStates[i].dwCurrentState = dwCurrentState;
       rgReaderStates[i].dwEventState = dwEventState;
       rgReaderStates[i].cbAtr = rgbAtr->len;
       memcpy(rgReaderStates[i].rgbAtr, rgbAtr->data, rgbAtr->len);
@@ -366,7 +346,7 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
     scard_readerstate_rpc *in_reader_state = g_ptr_array_index(inReaderStates, i);
     g_object_unref(in_reader_state); 
   }
-
+  //printf ("Client caught an exception: %s\n", error->message);
   g_ptr_array_free(inReaderStates, TRUE);
   g_object_unref(ret_rpc);
 
