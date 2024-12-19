@@ -131,7 +131,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /* Display, on stderr, a trace of the WinSCard calls with arguments and
  * results */
-//#define DO_TRACE
+#define DO_TRACE
 
 /* Profile the execution time of WinSCard calls */
 //#define DO_PROFILE
@@ -894,7 +894,7 @@ end:
 end2:
 
 	PROFILE_END(rv)
-	API_TRACE_OUT("%d", *pdwActiveProtocol)
+	API_TRACE_OUT("%d, %ld", *pdwActiveProtocol, *phCard)
 
 	return rv;
 }
@@ -1442,6 +1442,7 @@ LONG SCardStatus(SCARDHANDLE hCard, LPSTR szReaderName,
 	LPBYTE bufAtr = NULL;
 	DWORD dummy = 0;
 
+	API_TRACE_IN("%ld, %p, %ld, %p, %ld", hCard, szReaderName, *pcchReaderLen, pbAtr, *pcbAtrLen)
 	PROFILE_START
 
 	if(rdp_ready) {
@@ -1614,6 +1615,8 @@ end:
 
 end2:
 	PROFILE_END(rv)
+
+	API_TRACE_OUT("%ld", rv)
 
 	return rv;
 }

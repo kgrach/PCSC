@@ -21,6 +21,7 @@ static ogonIf           *client     = NULL;
 int rdp_ready = 0;
 
 void __attribute__((constructor)) start_client (void) {
+  return;
   
   gboolean success = FALSE;
 
@@ -51,7 +52,7 @@ void __attribute__((constructor)) start_client (void) {
 
 
 void __attribute__((destructor)) stop_client() {
-
+  return;
   thrift_transport_close (transport, &error);
 
   g_clear_error (&error);
