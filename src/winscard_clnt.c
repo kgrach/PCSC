@@ -2941,6 +2941,10 @@ LONG SCardListReaders(SCARDCONTEXT hContext, /*@unused@*/ LPCSTR mszGroups,
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
+	if(rdp_ready) {
+		rv = Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
+		goto end2;
+	}
 
 	/*
 	 * Check for NULL parameters
@@ -2948,10 +2952,6 @@ LONG SCardListReaders(SCARDCONTEXT hContext, /*@unused@*/ LPCSTR mszGroups,
 	if (pcchReaders == NULL)
 		return SCARD_E_INVALID_PARAMETER;
 
-	if(rdp_ready) {
-		rv = Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
-		goto end2;
-	}
 	/*
 	 * Make sure this context has been opened
 	 */

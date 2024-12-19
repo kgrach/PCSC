@@ -10,6 +10,9 @@ LONG Copy_WithMemAllocIfNeed(LPVOID srcBuf, DWORD srcBufLen, LPVOID* dstBuf, LPD
 
     if(SCARD_AUTOALLOCATE == *dstBufLen) {
 
+        if(NULL == dstBuf)
+            goto end;
+        
         buf = malloc(srcBufLen);
         
         if (NULL == buf) {
@@ -24,10 +27,12 @@ LONG Copy_WithMemAllocIfNeed(LPVOID srcBuf, DWORD srcBufLen, LPVOID* dstBuf, LPD
         }   
 
         buf = dstBuf;     
-    }
+    }    
 
     memcpy(buf, srcBuf, srcBufLen);
-    
+
+end:
+
     *dstBufLen = srcBufLen;
     
     return 0;

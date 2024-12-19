@@ -5,6 +5,54 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(gdb) Launch csptest",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/opt/cprocsp/bin/amd64/csptest",
+            "args": ["-card", "-enum", "-verbose"],
+            "stopAtEntry": false,
+            "cwd": "/opt/cprocsp/bin/amd64/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch JaCartaUC",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/opt/jacartauc/bin/JaCartaUC",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/opt/jacartauc/bin/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "(gdb) Launch pcscd",
             "type": "cppdbg",
             "request": "launch",

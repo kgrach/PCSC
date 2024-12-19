@@ -106,7 +106,10 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   LONG ret = SCARD_F_INTERNAL_ERROR;
   
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
-  
+
+  if (NULL == mszReaders)
+    *pcchReaders = SCARD_AUTOALLOCATE;
+
   if (ogon_if_list_readers(client, &ret_rpc, hContext, *pcchReaders, &error)) {
 
     GByteArray *Readers;
@@ -119,18 +122,12 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
     LONG err;
 
     if(SCARD_S_SUCCESS == ret) {
-
       err = Copy_WithMemAllocIfNeed(Readers->data, Readers->len, (void**)mszReaders, pcchReaders);
       if(err){
         ret = err;
       }
     }
-    //printf ("Client caught an exception: %s\n", error->message);
   }
-
-  
-  
-  //g_clear_error (&error);
 
   g_object_unref(ret_rpc);
 
@@ -143,6 +140,9 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
  LONG ret = SCARD_F_INTERNAL_ERROR;
 
   return_lrg *ret_rpc = g_object_new(TYPE_RETURN_LRG, NULL);
+
+  if (NULL == mszGroups)
+    *pcchGroups = SCARD_AUTOALLOCATE;
   
   if (ogon_if_list_reader_groups(client, &ret_rpc, hContext, *pcchGroups, &error)) {
 
@@ -240,6 +240,12 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
+
+  if (NULL == szReaderName)
+    *pcchReaderLen = SCARD_AUTOALLOCATE;
+  
+  if (NULL == pbAtr)
+    *pcbAtrLen = SCARD_AUTOALLOCATE;
   
   if (ogon_if_status(client, &ret_rpc, hCard, *pcchReaderLen, *pcbAtrLen, &error)) {
 
@@ -296,16 +302,10 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
   for(i = 0; i < cReaders; i++) {
     
     scard_readerstate_rpc *in_reader_state = g_object_new(TYPE_SCARD_READERSTATE_RPC, NULL);
-    //GByteArray *atr = g_byte_array_new();
-    //DWORD AtrSize = rgReaderStates->cbAtr > MAX_ATR_SIZE ? MAX_ATR_SIZE : rgReaderStates->cbAtr;
-
-    //atr = g_byte_array_append(atr, &rgReaderStates->rgbAtr[0], AtrSize);
 
     g_object_set(in_reader_state,
                   "szReader",  rgReaderStates->szReader,
                   "dwCurrentState", rgReaderStates->dwCurrentState,
-                  //"dwEventState", 0,
-                  //"rgbAtr", NULL,
                   NULL);   
 
     g_ptr_array_add(inReaderStates, in_reader_state);
@@ -324,18 +324,15 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
       scard_readerstate_rpc *out_reader_state = g_ptr_array_index(outReaderStates, i);
 
       LPSTR_RPC    szReader;
-      //DWORD_RPC    dwCurrentState;
 	    DWORD_RPC    dwEventState;
       LPBYTE_RPC   rgbAtr;
           
       g_object_get(out_reader_state,
                   "szReader",  &szReader,
-                  //"dwCurrentState", &dwCurrentState,
                   "dwEventState", &dwEventState,
                   "rgbAtr", &rgbAtr,
                   NULL);  
       
-      //rgReaderStates[i].dwCurrentState = dwCurrentState;
       rgReaderStates[i].dwEventState = dwEventState;
       rgReaderStates[i].cbAtr = rgbAtr->len;
       memcpy(rgReaderStates[i].rgbAtr, rgbAtr->data, rgbAtr->len);
@@ -394,8 +391,6 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
       pioRecvPci->cbPciLength = ioRecvPCI->cbPciLength;
       pioRecvPci->dwProtocol = ioRecvPCI->dwProtocol;
     }
-    //g_byte_array_free (recvBuf, TRUE);
-    //g_object_unref(ioRecvPCI);
   }
 
   g_byte_array_free (sendBuf, TRUE);
@@ -426,6 +421,9 @@ LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWO
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   return_ga *ret_rpc = g_object_new(TYPE_RETURN_GA, NULL);
+  
+  if (NULL == pbAttr)
+    *pcbAttrLen = SCARD_AUTOALLOCATE;
   
   if (ogon_if_get_attrib(client, &ret_rpc, hCard, dwAttrId, *pcbAttrLen, &error)) {
 
