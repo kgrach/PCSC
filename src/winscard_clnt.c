@@ -381,6 +381,9 @@ static LONG getReaderStates(SCONTEXTMAP * currentContextMap);
 static LONG getReaderStatesAndRegisterForEvents(SCONTEXTMAP * currentContextMap);
 static LONG unregisterFromEvents(SCONTEXTMAP * currentContextMap);
 
+
+void* GetThriftClient();
+
 /*
  * Thread safety functions
  */
@@ -471,9 +474,9 @@ LONG SCardEstablishContext(DWORD dwScope, LPCVOID pvReserved1,
 	API_TRACE_IN("%ld, %p, %p", dwScope, pvReserved1, pvReserved2)
 	PROFILE_START
 
-	
-	if(rdp_ready) {
-		rv = Ogon_SCardEstablishContext(dwScope, pvReserved1, pvReserved2, phContext);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardEstablishContext(thrift_client, dwScope, pvReserved1, pvReserved2, phContext);
 		goto end;
 	}
 
@@ -702,8 +705,9 @@ LONG SCardReleaseContext(SCARDCONTEXT hContext)
 	API_TRACE_IN("%ld", hContext)
 	PROFILE_START
 
-	if(rdp_ready) {
-		rv = Ogon_SCardReleaseContext(hContext);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardReleaseContext(thrift_client, hContext);
 		goto end2;
 	}
 
@@ -821,8 +825,9 @@ LONG SCardConnect(SCARDCONTEXT hContext, LPCSTR szReader,
 	PROFILE_START
 	API_TRACE_IN("%ld %s %ld %ld", hContext, szReader, dwShareMode, dwPreferredProtocols)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardConnect(hContext, szReader, dwShareMode, dwPreferredProtocols, phCard, pdwActiveProtocol);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardConnect(thrift_client, hContext, szReader, dwShareMode, dwPreferredProtocols, phCard, pdwActiveProtocol);
 		goto end2;
 	}
 	/*
@@ -983,8 +988,9 @@ LONG SCardReconnect(SCARDHANDLE hCard, DWORD dwShareMode,
 	PROFILE_START
 	API_TRACE_IN("%ld %ld %ld", hCard, dwShareMode, dwPreferredProtocols)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardReconnect(hCard, dwShareMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocol);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardReconnect(thrift_client, hCard, dwShareMode, dwPreferredProtocols, dwInitialization, pdwActiveProtocol);
 		goto end2;
 	}
 
@@ -1085,8 +1091,9 @@ LONG SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition)
 	PROFILE_START
 	API_TRACE_IN("%ld %ld", hCard, dwDisposition)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardDisconnect(hCard, dwDisposition);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardDisconnect(thrift_client, hCard, dwDisposition);
 		goto end2;
 	}
 
@@ -1182,8 +1189,9 @@ LONG SCardBeginTransaction(SCARDHANDLE hCard)
 	PROFILE_START
 	API_TRACE_IN("%ld", hCard)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardBeginTransaction(hCard);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardBeginTransaction(thrift_client, hCard);
 		goto end2;
 	}
 
@@ -1288,8 +1296,9 @@ LONG SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition)
 	PROFILE_START
 	API_TRACE_IN("%ld", hCard)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardEndTransaction( hCard, dwDisposition);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardEndTransaction(thrift_client, hCard, dwDisposition);
 		goto end2;
 	}
 
@@ -1445,8 +1454,9 @@ LONG SCardStatus(SCARDHANDLE hCard, LPSTR szReaderName,
 	API_TRACE_IN("%ld, %p, %ld, %p, %ld", hCard, szReaderName, *pcchReaderLen, pbAtr, *pcbAtrLen)
 	PROFILE_START
 
-	if(rdp_ready) {
-		rv = Ogon_SCardStatus(hCard, szReaderName, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardStatus(thrift_client, hCard, szReaderName, pcchReaderLen, pdwState, pdwProtocol, pbAtr, pcbAtrLen);
 		goto end2;
 	}
 
@@ -1750,8 +1760,9 @@ LONG SCardGetStatusChange(SCARDCONTEXT hContext, DWORD dwTimeout,
 	}
 #endif
 
-	if(rdp_ready) {
-		rv = Ogon_SCardGetStatusChange(hContext, dwTimeout,	rgReaderStates, cReaders);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardGetStatusChange(thrift_client, hContext, dwTimeout,	rgReaderStates, cReaders);
 		goto end2;
 	}
 
@@ -2293,8 +2304,9 @@ LONG SCardControl(SCARDHANDLE hCard, DWORD dwControlCode, LPCVOID pbSendBuffer,
 
 	PROFILE_START
 
-	if(rdp_ready) {
-		rv = Ogon_SCardControl(hCard, dwControlCode, pbSendBuffer, cbSendLength, pbRecvBuffer, cbRecvLength, lpBytesReturned);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardControl(thrift_client, hCard, dwControlCode, pbSendBuffer, cbSendLength, pbRecvBuffer, cbRecvLength, lpBytesReturned);
 		goto end2;
 	}
 
@@ -2506,8 +2518,9 @@ LONG SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr,
 
 	PROFILE_START
 
-	if(rdp_ready) {
-		ret = Ogon_SCardGetAttrib(hCard, dwAttrId, pbAttr, pcbAttrLen);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		ret = Ogon_SCardGetAttrib(thrift_client, hCard, dwAttrId, pbAttr, pcbAttrLen);
 		goto end2;
 	}
 
@@ -2755,9 +2768,19 @@ LONG SCardTransmit(SCARDHANDLE hCard, const SCARD_IO_REQUEST *pioSendPci,
 	struct transmit_struct scTransmitStruct;
 
 	PROFILE_START
+	API_TRACE_IN("hCard=%ld, cbSendLength=%ld, pcbRecvLength=%ld", hCard, cbSendLength, *pcbRecvLength);
 
-	if(rdp_ready) {
-		rv = Ogon_SCardTransmit(hCard, pioSendPci, pbSendBuffer, cbSendLength, pioRecvPci, pbRecvBuffer, pcbRecvLength);
+/*#ifdef DO_TRACE
+	for (j=0; j<cReaders; j++)
+	{
+		API_TRACE_IN("[%d] %s %X %X", j, rgReaderStates[j].szReader,
+			rgReaderStates[j].dwCurrentState, rgReaderStates[j].dwEventState)
+	}
+#endif*/
+
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardTransmit(thrift_client, hCard, pioSendPci, pbSendBuffer, cbSendLength, pioRecvPci, pbRecvBuffer, pcbRecvLength);
 		goto end2;
 	}
 
@@ -2864,6 +2887,8 @@ end:
 	(void)pthread_mutex_unlock(&currentContextMap->mMutex);
 
 end2:
+
+	API_TRACE_OUT("rv=%ld pcbRecvLength=%ld", rv, *pcbRecvLength)
 	PROFILE_END(rv)
 
 	return rv;
@@ -2944,8 +2969,9 @@ LONG SCardListReaders(SCARDCONTEXT hContext, /*@unused@*/ LPCSTR mszGroups,
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardListReaders(hContext, mszGroups, mszReaders, pcchReaders);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardListReaders(thrift_client, hContext, mszGroups, mszReaders, pcchReaders);
 		goto end2;
 	}
 
@@ -3063,8 +3089,9 @@ LONG SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem)
 
 	PROFILE_START
 
-	if(rdp_ready) {
-		Ogon_SCardFreeMemory(hContext, pvMem);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		Ogon_SCardFreeMemory(thrift_client, hContext, pvMem);
 		goto end;
 	}
 
@@ -3142,8 +3169,9 @@ LONG SCardListReaderGroups(SCARDCONTEXT hContext, LPSTR mszGroups,
 
 	PROFILE_START
 
-	if(rdp_ready) {
-		rv = Ogon_SCardListReaderGroups(hContext, mszGroups, pcchGroups);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardListReaderGroups(thrift_client, hContext, mszGroups, pcchGroups);
 		goto end2;
 	}
 
@@ -3240,8 +3268,9 @@ LONG SCardCancel(SCARDCONTEXT hContext)
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardCancel(hContext);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardCancel(thrift_client, hContext);
 		goto end2;
 	}
 
@@ -3331,8 +3360,9 @@ LONG SCardIsValidContext(SCARDCONTEXT hContext)
 	PROFILE_START
 	API_TRACE_IN("%ld", hContext)
 
-	if(rdp_ready) {
-		rv = Ogon_SCardIsValidContext(hContext);
+	void* thrift_client = GetThriftClient();
+	if(thrift_client) {
+		rv = Ogon_SCardIsValidContext(thrift_client, hContext);
 		goto end2;
 	}
 

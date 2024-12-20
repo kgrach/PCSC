@@ -6,38 +6,38 @@
 
 extern int rdp_ready;
 
-LONG Ogon_SCardEstablishContext(DWORD dwScope, 
+LONG Ogon_SCardEstablishContext(void* client, DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
 		                        LPSCARDCONTEXT phContext);  
 
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext);                                                            
+LONG Ogon_SCardReleaseContext(void* client, SCARDCONTEXT hContext);                                                            
 
-LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
+LONG Ogon_SCardListReaders(void* client,SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
 	                       LPSTR mszReaders, 
                            LPDWORD pcchReaders); 
 
-LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext, 
+LONG Ogon_SCardListReaderGroups(void* client,SCARDCONTEXT hContext, 
                                 LPSTR mszGroups, 
                                 LPDWORD pcchGroups);
                            
-LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
+LONG Ogon_SCardConnect(void* client,SCARDCONTEXT hContext, 
                        LPCSTR szReader,
 	                   DWORD dwShareMode, 
                        DWORD dwPreferredProtocols, 
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol);
 
-LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+LONG Ogon_SCardReconnect(void* client,SCARDHANDLE hCard, 
                          DWORD dwShareMode,
 	                     DWORD dwPreferredProtocols, 
                          DWORD dwInitialization,
                          LPDWORD pdwActiveProtocol);
 
-LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition);
+LONG Ogon_SCardDisconnect(void* client,SCARDHANDLE hCard, DWORD dwDisposition);
 
-LONG Ogon_SCardStatus(SCARDHANDLE hCard, 
+LONG Ogon_SCardStatus(void* client,SCARDHANDLE hCard, 
                       LPSTR szReaderName, 
                       LPDWORD pcchReaderLen, 
                       LPDWORD pdwState, 
@@ -45,7 +45,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
                       LPBYTE pbAtr, 
                       LPDWORD pcbAtrLen);    
 
-LONG Ogon_SCardTransmit(SCARDHANDLE hCard, 
+LONG Ogon_SCardTransmit(void* client,SCARDHANDLE hCard, 
                         const SCARD_IO_REQUEST *pioSendPci,
 	                    LPCBYTE pbSendBuffer, 
                         DWORD cbSendLength,
@@ -53,18 +53,18 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
                         LPBYTE pbRecvBuffer,
 	                    LPDWORD pcbRecvLength);
 
-LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext, 
+LONG Ogon_SCardGetStatusChange(void* client,SCARDCONTEXT hContext, 
                                DWORD dwTimeout,	
                                SCARD_READERSTATE *rgReaderStates, 
                                DWORD cReaders);
 
-LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard);
+LONG Ogon_SCardBeginTransaction(void* client,SCARDHANDLE hCard);
 
-LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition);
+LONG Ogon_SCardEndTransaction(void* client,SCARDHANDLE hCard, DWORD dwDisposition);
 
-LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen);
+LONG Ogon_SCardGetAttrib(void* client,SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen);
 
-LONG Ogon_SCardControl(SCARDHANDLE hCard, 
+LONG Ogon_SCardControl(void* client,SCARDHANDLE hCard, 
                        DWORD dwControlCode, 
                        LPCVOID pbSendBuffer,
                        DWORD cbSendLength, 
@@ -72,10 +72,10 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
                        DWORD cbRecvLength,
                        LPDWORD lpBytesReturned);
 
-LONG Ogon_SCardCancel(SCARDCONTEXT hContext);
+LONG Ogon_SCardCancel(void* client,SCARDCONTEXT hContext);
 
-LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext);
+LONG Ogon_SCardIsValidContext(void* client,SCARDCONTEXT hContext);
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem);
+void Ogon_SCardFreeMemory(void* client,SCARDCONTEXT hContext, LPCVOID pvMem);
 
 #endif

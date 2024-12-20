@@ -12,16 +12,15 @@
 #include "client.h"
 #include "utils.h"
 
-static ThriftSocket     *socket     = NULL;
-static ThriftTransport  *transport  = NULL;
-static ThriftProtocol   *protocol   = NULL;
+//static ThriftSocket     *socket     = NULL;
+//static ThriftTransport  *transport  = NULL;
+//static ThriftProtocol   *protocol   = NULL;
 static GError           *error      = NULL;
-static ogonIf           *client     = NULL;
+//static ogonIf           *client     = NULL;
 
-int rdp_ready = 0;
-
+//int rdp_ready = 0;
+/*
 void __attribute__((constructor)) start_client (void) {
-  return;
   
   gboolean success = FALSE;
 
@@ -48,11 +47,12 @@ void __attribute__((constructor)) start_client (void) {
   success = thrift_transport_open(transport, &error);
   
   rdp_ready = (success ? 1 : 0 );
+
 }
 
 
 void __attribute__((destructor)) stop_client() {
-  return;
+
   thrift_transport_close (transport, &error);
 
   g_clear_error (&error);
@@ -61,9 +61,10 @@ void __attribute__((destructor)) stop_client() {
   g_object_unref (protocol);
   g_object_unref (transport);
   g_object_unref (socket);
-}
-
-LONG Ogon_SCardEstablishContext(DWORD dwScope, 
+}*/
+ 
+LONG Ogon_SCardEstablishContext(void* client, 
+                                DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
 		                            LPSCARDCONTEXT phContext) {
@@ -79,13 +80,16 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
                   "cardContext", phContext,
                   NULL);                 
   }
+  else {
+    printf ("Client caught an exception: %s\n", error->message);
+  }
 
   g_object_unref(ret_rpc);
 
   return ret;
 }
 
-LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
+LONG Ogon_SCardReleaseContext(void* client,SCARDCONTEXT hContext) {
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
  
@@ -99,7 +103,7 @@ LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
   return ret;
 }
 
-LONG Ogon_SCardListReaders(SCARDCONTEXT hContext, 
+LONG Ogon_SCardListReaders(void* client,SCARDCONTEXT hContext, 
                            LPCSTR mszGroups,
 	                         LPSTR mszReaders, 
                            LPDWORD pcchReaders) {
@@ -135,10 +139,10 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   return ret;
 }
 
-LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext, 
+LONG Ogon_SCardListReaderGroups(void* client,SCARDCONTEXT hContext, 
                                 LPSTR mszGroups, 
                                 LPDWORD pcchGroups) {
- LONG ret = SCARD_F_INTERNAL_ERROR;
+  LONG ret = SCARD_F_INTERNAL_ERROR;
 
   return_lrg *ret_rpc = g_object_new(TYPE_RETURN_LRG, NULL);
 
@@ -168,7 +172,7 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
   return ret;
 }
 
-LONG Ogon_SCardConnect(SCARDCONTEXT hContext, 
+LONG Ogon_SCardConnect(void* client,SCARDCONTEXT hContext, 
                        LPCSTR szReader,
 	                     DWORD dwShareMode, 
                        DWORD dwPreferredProtocols, 
@@ -197,7 +201,7 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
   return ret;
 }
 
-LONG Ogon_SCardReconnect(SCARDHANDLE hCard, 
+LONG Ogon_SCardReconnect(void* client,SCARDHANDLE hCard, 
                          DWORD dwShareMode,
 	                       DWORD dwPreferredProtocols, 
                          DWORD dwInitialization,
@@ -222,7 +226,7 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
   return ret;
 }
 
-LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
+LONG Ogon_SCardDisconnect(void* client,SCARDHANDLE hCard, DWORD dwDisposition) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
   
@@ -231,7 +235,7 @@ LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   return ret;
 }
 
-LONG Ogon_SCardStatus(SCARDHANDLE hCard, 
+LONG Ogon_SCardStatus(void* client,SCARDHANDLE hCard, 
                       LPSTR szReaderName, 
                       LPDWORD pcchReaderLen, 
                       LPDWORD pdwState, 
@@ -288,7 +292,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
   return ret;
 }
 
-LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext, 
+LONG Ogon_SCardGetStatusChange(void* client,SCARDCONTEXT hContext, 
                                DWORD dwTimeout,	
                                SCARD_READERSTATE *rgReaderStates, 
                                DWORD cReaders) { 
@@ -351,7 +355,7 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
   return ret;
 }
 
-LONG Ogon_SCardTransmit(SCARDHANDLE hCard, 
+LONG Ogon_SCardTransmit(void* client,SCARDHANDLE hCard, 
                         const SCARD_IO_REQUEST *pioSendPci,
 	                      LPCBYTE pbSendBuffer, 
                         DWORD cbSendLength,
@@ -401,7 +405,7 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
   return ret;
 }
 
-LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard) {
+LONG Ogon_SCardBeginTransaction(void* client,SCARDHANDLE hCard) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   ogon_if_begin_transaction(client, &ret, hCard, &error);
@@ -409,7 +413,7 @@ LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard) {
   return ret;
 }
 
-LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition) {
+LONG Ogon_SCardEndTransaction(void* client,SCARDHANDLE hCard, DWORD dwDisposition) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   ogon_if_end_transaction(client, &ret, hCard, dwDisposition, &error);
@@ -417,7 +421,7 @@ LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition) {
   return ret;
 }
 
-LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen) {
+LONG Ogon_SCardGetAttrib(void* client,SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
@@ -450,7 +454,7 @@ LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWO
   return ret;
 }
 
-LONG Ogon_SCardControl(SCARDHANDLE hCard, 
+LONG Ogon_SCardControl(void* client,SCARDHANDLE hCard, 
                        DWORD dwControlCode, 
                        LPCVOID pbSendBuffer,
                        DWORD cbSendLength, 
@@ -490,7 +494,7 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
   return ret;                                             
 }
 
-LONG Ogon_SCardCancel(SCARDCONTEXT hContext) {
+LONG Ogon_SCardCancel(void* client,SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   ogon_if_cancel(client, &ret, hContext, &error);
@@ -498,7 +502,7 @@ LONG Ogon_SCardCancel(SCARDCONTEXT hContext) {
   return ret;
 }
 
-LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext) {
+LONG Ogon_SCardIsValidContext(void* client,SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   ogon_if_is_valid_context(client, &ret, hContext, &error);
@@ -506,7 +510,7 @@ LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext) {
   return ret;
 }
 
-void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
+void Ogon_SCardFreeMemory(void* client,SCARDCONTEXT hContext, LPCVOID pvMem) {
   
   if(pvMem)
     free((void*)pvMem);
