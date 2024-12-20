@@ -10,6 +10,7 @@
 #include <thrift/c_glib/protocol/thrift_binary_protocol.h>
 
 #include "gen-c_glib/ogon.h"
+#include "utils.h"
 
 LONG Copy_WithMemAllocIfNeed(LPVOID srcBuf, DWORD srcBufLen, LPVOID* dstBuf, LPDWORD dstBufLen) {
 
@@ -48,19 +49,31 @@ end:
 static pthread_mutex_t clientMutex = PTHREAD_MUTEX_INITIALIZER;
 static GPtrArray *thriftClients = NULL;
 
-struct ThriftClientData {
-    ThriftSocket     *socket;
-    ThriftTransport  *transport;
-    ThriftProtocol   *protocol;
-    ogonIf           *client;
-    long             tid;
-};
+void CleanClientData(void* clientData) {
+    
+  struct ThriftClientData *cli = clientData;
+
+  thrift_transport_close (cli->transport, &cli->error);
+
+  g_clear_error (&cli->error);
+  
+  g_object_unref (cli->client);
+  
+  g_object_unref (cli->protocol);
+  
+  g_object_unref (cli->transport);
+  
+  g_object_unref (cli->socket);
+}
+
 
 void* GetThriftClient() {
 
+    //return NULL;
+
     pthread_mutex_lock(&clientMutex);
 
-    ogonIf *client = NULL;
+    struct ThriftClientData *clientData = NULL;
 
     if(NULL == thriftClients)
         thriftClients = g_ptr_array_new();
@@ -72,26 +85,28 @@ void* GetThriftClient() {
         struct ThriftClientData *cli = g_ptr_array_index(thriftClients, i);
 
         if(tid == cli->tid) {
-            client = cli->client;
+            clientData = cli;
             goto end;
         }
     }
 
     gboolean success = FALSE;
 
-    ThriftSocket     *socket;
-    ThriftTransport  *transport;
-    ThriftProtocol   *protocol;
-    GError           *error;
+    ThriftSocket     *socket     = NULL;
+    ThriftTransport  *transport  = NULL;
+    ThriftProtocol   *protocol   = NULL;
+    GError           *error      = NULL;
+    ogonIf           *client     = NULL;
 
 #if (!GLIB_CHECK_VERSION (2, 36, 0))
   g_type_init ();
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.101.177",
+                            "hostname",  "100.10.253.56",
                             "port",      9091,
                             NULL);
+
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
                             "transport", socket,
                             NULL);
@@ -114,19 +129,25 @@ void* GetThriftClient() {
     cli->transport = transport;
     cli->protocol = protocol;
     cli->client = client;
-    //cli->error = error;
+    cli->error = error;
     cli->tid = tid;
+
+    clientData = cli;
 
     g_ptr_array_add(thriftClients, cli);
   }
   else {
-    client = NULL;
+
+    g_clear_error (&error);
+    g_object_unref (client);
+    g_object_unref (protocol);
+    g_object_unref (transport);
+    g_object_unref (socket);
   }
 
 
 end:
   pthread_mutex_unlock(&clientMutex);
 
-  return client;
+  return clientData;
 }
- 
