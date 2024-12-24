@@ -19,9 +19,9 @@ static GError           *error      = NULL;
 static ogonIf           *client     = NULL;
 
 int rdp_ready = 0;
+static pthread_mutex_t g_clientMutex = PTHREAD_MUTEX_INITIALIZER;
 
 void __attribute__((constructor)) start_client (void) {
-  return;
   
   gboolean success = FALSE;
 
@@ -30,7 +30,7 @@ void __attribute__((constructor)) start_client (void) {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.124",
+                            "hostname",  "192.168.1.64",
                             "port",      9091,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -52,22 +52,28 @@ void __attribute__((constructor)) start_client (void) {
 
 
 void __attribute__((destructor)) stop_client() {
-  return;
+  pthread_mutex_lock(&g_clientMutex);
+
+  //sleep(10);
+  
   thrift_transport_close (transport, &error);
 
-  g_clear_error (&error);
+  //g_clear_error (&error);
 
   g_object_unref (client);
   g_object_unref (protocol);
   g_object_unref (transport);
   g_object_unref (socket);
+
+  pthread_mutex_unlock(&g_clientMutex);
 }
 
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
                                 LPCVOID pvReserved1, 
                                 LPCVOID pvReserved2,
 		                            LPSCARDCONTEXT phContext) {
-    
+  pthread_mutex_lock(&g_clientMutex);
+
   LONG ret = SCARD_F_INTERNAL_ERROR;
 
   return_ec *ret_rpc = g_object_new(TYPE_RETURN_EC, NULL);
@@ -81,11 +87,12 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
   }
 
   g_object_unref(ret_rpc);
-
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
+  pthread_mutex_lock(&g_clientMutex);
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
  
@@ -95,7 +102,7 @@ LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
                   "retValue", &ret,
                   NULL);                 */
   }
-
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -105,7 +112,8 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
                            LPDWORD pcchReaders) {
     
   LONG ret = SCARD_F_INTERNAL_ERROR;
-  
+  pthread_mutex_lock(&g_clientMutex);
+
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
 
   if (NULL == mszReaders)
@@ -131,7 +139,7 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   }
 
   g_object_unref(ret_rpc);
-
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -139,6 +147,7 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
                                 LPSTR mszGroups, 
                                 LPDWORD pcchGroups) {
  LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_lrg *ret_rpc = g_object_new(TYPE_RETURN_LRG, NULL);
 
@@ -164,7 +173,7 @@ LONG Ogon_SCardListReaderGroups(SCARDCONTEXT hContext,
   }
 
   g_object_unref(ret_rpc);
-
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -175,6 +184,7 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
                        LPSCARDHANDLE phCard,
                        LPDWORD pdwActiveProtocol) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
   
@@ -194,6 +204,7 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
 
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -203,6 +214,7 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
                          DWORD dwInitialization,
                          LPDWORD pdwActiveProtocol) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
   
@@ -219,15 +231,18 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
-  
+  pthread_mutex_lock(&g_clientMutex);
+ 
   ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -239,6 +254,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
                       LPBYTE pbAtr, 
                       LPDWORD pcbAtrLen) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
 
@@ -285,6 +301,7 @@ LONG Ogon_SCardStatus(SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -293,6 +310,7 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
                                SCARD_READERSTATE *rgReaderStates, 
                                DWORD cReaders) { 
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_gsc *ret_rpc = g_object_new(TYPE_RETURN_GSC, NULL);
   
@@ -348,6 +366,7 @@ LONG Ogon_SCardGetStatusChange(SCARDCONTEXT hContext,
   g_ptr_array_free(inReaderStates, TRUE);
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -360,6 +379,7 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
 	                      LPDWORD pcbRecvLength) {
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_t *ret_rpc = g_object_new(TYPE_RETURN_T, NULL);
 
@@ -398,29 +418,35 @@ LONG Ogon_SCardTransmit(SCARDHANDLE hCard,
   g_object_unref(ioSendPCI);
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardBeginTransaction(SCARDHANDLE hCard) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
-
+  pthread_mutex_lock(&g_clientMutex);
+  
   ogon_if_begin_transaction(client, &ret, hCard, &error);
-
+  
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardEndTransaction(SCARDHANDLE hCard, DWORD dwDisposition) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
-
+  pthread_mutex_lock(&g_clientMutex);
+  
   ogon_if_end_transaction(client, &ret, hCard, dwDisposition, &error);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWORD pcbAttrLen) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
-
+  pthread_mutex_lock(&g_clientMutex);
+  pthread_mutex_unlock(&g_clientMutex);
   return_ga *ret_rpc = g_object_new(TYPE_RETURN_GA, NULL);
   
   if (NULL == pbAttr)
@@ -447,6 +473,7 @@ LONG Ogon_SCardGetAttrib(SCARDHANDLE hCard, DWORD dwAttrId, LPBYTE pbAttr, LPDWO
 
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
@@ -458,6 +485,7 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
                        DWORD cbRecvLength,
                        LPDWORD lpBytesReturned) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   return_ctrl *ret_rpc = g_object_new(TYPE_RETURN_CTRL, NULL);
 
@@ -487,27 +515,35 @@ LONG Ogon_SCardControl(SCARDHANDLE hCard,
   g_byte_array_free (sendBuf, TRUE);
   g_object_unref(ret_rpc);
 
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;                                             
 }
 
 LONG Ogon_SCardCancel(SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   ogon_if_cancel(client, &ret, hContext, &error);
-
+  
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 LONG Ogon_SCardIsValidContext(SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
+  pthread_mutex_lock(&g_clientMutex);
 
   ogon_if_is_valid_context(client, &ret, hContext, &error);
-
+  
+  pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
 
 void Ogon_SCardFreeMemory(SCARDCONTEXT hContext, LPCVOID pvMem) {
-  
+  pthread_mutex_lock(&g_clientMutex);
+
   if(pvMem)
     free((void*)pvMem);
+
+  pthread_mutex_unlock(&g_clientMutex);  
 }
