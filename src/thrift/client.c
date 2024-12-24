@@ -269,8 +269,8 @@ LONG Ogon_SCardGetStatusChange(void* clientData,SCARDCONTEXT hContext,
     scard_readerstate_rpc *in_reader_state = g_object_new(TYPE_SCARD_READERSTATE_RPC, NULL);
 
     g_object_set(in_reader_state,
-                  "szReader",  rgReaderStates->szReader,
-                  "dwCurrentState", rgReaderStates->dwCurrentState,
+                  "szReader",  rgReaderStates[i].szReader,
+                  "dwCurrentState", rgReaderStates[i].dwCurrentState,
                   NULL);   
 
     g_ptr_array_add(inReaderStates, in_reader_state);
