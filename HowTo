@@ -1,4 +1,4 @@
-sudo dnf install meson flex polkit-devel thrift-glib thrift-devel pcsc-lite systemd-devel
+sudo dnf install meson flex polkit-devel thrift-glib thrift-devel pcsc-lite systemd-devel pcsc-lite-devel
 
 cd src/thrift 
 thrift --gen c_glib ogon.thrift
