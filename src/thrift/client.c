@@ -20,18 +20,22 @@ static ogonIf           *client     = NULL;
 
 int rdp_ready = 0;
 static pthread_mutex_t g_clientMutex = PTHREAD_MUTEX_INITIALIZER;
+FILE* log_file = NULL;
 
 void __attribute__((constructor)) start_client (void) {
   
   gboolean success = FALSE;
+
+  log_file = fopen("ogon.log", "w+");
 
 #if (!GLIB_CHECK_VERSION (2, 36, 0))
   g_type_init ();
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.64",
-                            "port",      9091,
+                            //"hostname",  "192.168.1.64",
+                            "hostname",  "127.0.0.1",
+                            "port",      9092,
                             NULL);
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
                             "transport", socket,
@@ -46,26 +50,20 @@ void __attribute__((constructor)) start_client (void) {
                          NULL);
 
   success = thrift_transport_open(transport, &error);
-  
+ 
   rdp_ready = (success ? 1 : 0 );
 }
 
 
 void __attribute__((destructor)) stop_client() {
-  pthread_mutex_lock(&g_clientMutex);
-
-  //sleep(10);
-  
   thrift_transport_close (transport, &error);
-
-  //g_clear_error (&error);
 
   g_object_unref (client);
   g_object_unref (protocol);
   g_object_unref (transport);
   g_object_unref (socket);
 
-  pthread_mutex_unlock(&g_clientMutex);
+  fclose(log_file);
 }
 
 LONG Ogon_SCardEstablishContext(DWORD dwScope, 
@@ -86,6 +84,8 @@ LONG Ogon_SCardEstablishContext(DWORD dwScope,
                   NULL);                 
   }
 
+  OgonLog(log_file, "EstablishContext", "ret=%ld, hContext=%ld", ret, *phContext);
+
   g_object_unref(ret_rpc);
   pthread_mutex_unlock(&g_clientMutex);
   return ret;
@@ -96,12 +96,10 @@ LONG Ogon_SCardReleaseContext(SCARDCONTEXT hContext) {
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
  
-  if (ogon_if_release_context(client, &ret, hContext, &error)) {
+  ogon_if_release_context(client, &ret, hContext, &error);
 
-    /*g_object_get(ret_rpc,
-                  "retValue", &ret,
-                  NULL);                 */
-  }
+  OgonLog(log_file, "ReleaseContext", "", "");
+  
   pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
@@ -139,6 +137,12 @@ LONG Ogon_SCardListReaders(SCARDCONTEXT hContext,
   }
 
   g_object_unref(ret_rpc);
+
+//  if(mszReaders)
+    OgonLog(log_file, "ListReaders", "ret=%ld, ReadersLen=%ld, Readers='%s'", ret, *pcchReaders, mszReaders ? mszReaders : "");
+//  else
+//    OgonLog(log_file, "ListReaders", "ret=%ld, ReadersLen=%ld", ret, *pcchReaders);
+
   pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
@@ -187,6 +191,9 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
   pthread_mutex_lock(&g_clientMutex);
 
   return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
+
+  OgonLog(log_file, "Connect", "(input args) hContext=%ld, ShareMode=%ld, PreferredProtocols=%ld, Reader='%s'", 
+          hContext, dwShareMode, dwPreferredProtocols, szReader ? szReader : "");
   
   if (ogon_if_connect(client, &ret_rpc, hContext, (LPCSTR_RPC)szReader, dwShareMode, dwPreferredProtocols, &error)) {
     
@@ -204,6 +211,8 @@ LONG Ogon_SCardConnect(SCARDCONTEXT hContext,
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "Connect", "(output args) ret=%ld, hCard=%ld, ActiveProtocol=%ld", ret, *phCard, *pdwActiveProtocol);
+
   pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
@@ -215,6 +224,9 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
                          LPDWORD pdwActiveProtocol) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   pthread_mutex_lock(&g_clientMutex);
+
+  OgonLog(log_file, "Reconnect", "(input args) hCard=%ld, ShareMode=%ld, PreferredProtocols=%ld, Initialization=%ld", 
+          hCard, dwShareMode, dwPreferredProtocols, dwInitialization);
 
   return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
   
@@ -231,6 +243,8 @@ LONG Ogon_SCardReconnect(SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "Reconnect", "(output args) ret=%ld, ActiveProtocol=%ld", ret, *pdwActiveProtocol);
+
   pthread_mutex_unlock(&g_clientMutex);
   return ret;
 }
@@ -239,6 +253,9 @@ LONG Ogon_SCardDisconnect(SCARDHANDLE hCard, DWORD dwDisposition) {
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
   pthread_mutex_lock(&g_clientMutex);
+
+  OgonLog(log_file, "Disconnect", "(input args) hCard=%ld, Disposition=%ld", 
+        hCard, dwDisposition);
  
   ogon_if_disconnect(client, &ret, hCard, dwDisposition, &error);
 
