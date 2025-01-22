@@ -1,0 +1,1 @@
+sudo dnf install meson flex polkit-devel thrift-glib thrift-devel pcsc-lite systemd-devel pcsc-lite-devel
