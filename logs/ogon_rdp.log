@@ -1,0 +1,423 @@
+[7FFFE54486C0]  EstablishContext in : Scope=0
+[7FFFE54486C0]  EstablishContext out : ret=0, hContext=178172910
+[7FFFE54486C0]  ListReaders in : hContext=178172910, ReadersBufferLen='0'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers=''
+[7FFFE54486C0]  ListReaders in : hContext=178172910, ReadersBufferLen='59'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  ListReaders in : hContext=178172910, ReadersBufferLen='0'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers=''
+[7FFFCE9FF6C0]  ListReaders in : hContext=178172910, ReadersBufferLen='59'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  EstablishContext in : Scope=0
+[7FFFE54486C0]  EstablishContext out : ret=0, hContext=811051198
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  Connect in : hContext=811051198
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFE54486C0]  BeginTransaction in : hCard=2007348317
+[7FFFE54486C0]  BeginTransaction out : ret=0
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=15
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=17
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  EndTransaction in : hCard=2007348317
+[7FFFE54486C0]  EndTransaction out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  BeginTransaction in : hCard=2007348317
+[7FFFE54486C0]  BeginTransaction out : ret=0
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=4
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=19 
+			 RecvBuff=6F0F8407A0000001510000A5049F6501FF9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=44 
+			 RecvBuff=418001128211226800014E460013357550460000000000000000000000000000000000000000000000009000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=12
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=19 
+			 RecvBuff=6F0F8407A0000001510000A5049F6501FF9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=26 
+			 RecvBuff=0302010102045BFE8592010C4A433030302D312076332E309000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=13
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=6A82
+[7FFFE54486C0]  EndTransaction in : hCard=2007348317
+[7FFFE54486C0]  EndTransaction out : ret=0
+[7FFFE54486C0]  BeginTransaction in : hCard=2007348317
+[7FFFE54486C0]  BeginTransaction out : ret=0
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=17
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=14
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=38 
+			 RecvBuff=62228701018302867F800202838408636D617066696C658A0104860800000030003000309000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=258 
+			 RecvBuff=0086867F027F0A801310001400000000000000000000000000000000000000000000000004000000000001000001010002000001000003100000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0010100000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00111001C200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006100
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=258 
+			 RecvBuff=000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006183
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=133 
+			 RecvBuff=0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012100000FFFFFFFFFFFFFFFF017000000101801000000100000000009000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=5 
+			 RecvBuff=0F3F8F9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=7 
+			 RecvBuff=3FC007FF189000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=10 
+			 RecvBuff=4E460013357550469000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=11
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=02D001009000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=11
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=02D001649000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=11
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=175 
+			 RecvBuff=02C00700000A000F000102C20A0004100000000000000002C30A0004100000000000000002C1010002C5040000000002C6040000000002C8010102C9013302CA04000346DC02CB010102CC010002CD010002CF010002D102101002D202101002D33F00000000000000000000001010000000000000000000001010040000000000000000000000000000000000000000000000000000000000000000000000000002D5010002D6010102D701009000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=11
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=17 
+			 RecvBuff=02C4010002C70832303234303533319000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=12
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=39 
+			 RecvBuff=62238701018302C000800200A18409546F6B656E496E666F8A0104860800000000003000309000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=163 
+			 RecvBuff=2020202020202020202020202020202020202020202020202020202020202020416C616464696E20522E442E20202020202020202020202020202020202020204A614361727461204C61736572202020344534363030313333353735353034360C04000000000000000000000000000000000000100000000400000000000000FFFFFFFF00000000FFFFFFFF0100000000000000000000000000000000000000FF9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=10
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=51 
+			 RecvBuff=622F87010883020003800200048A0104860E00FF001000FF001000FF00100000850F000100003300040A00000000000A0A9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=8
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=28 
+			 RecvBuff=621887013883023F008A0104860C0001000100010001000100019000
+[7FFFE54486C0]  EndTransaction in : hCard=2007348317
+[7FFFE54486C0]  EndTransaction out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  Connect in : hContext=178172910
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  Status in : hCard=89411758
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Status in : hCard=89411758
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  Status out : ret=0
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  Status in : hCard=89411758
+[7FFFCE9FF6C0]  Status out : ret=0
+[7FFFCE9FF6C0]  Status in : hCard=89411758
+[7FFFCE9FF6C0]  Status out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  Disconnect in : hCard=89411758, Disposition=0
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  Disconnect out : ret=0
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  IsValidContext out : ret=0
+[7FFFCE9FF6C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFCE9FF6C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  GetStatusChange out : ret=0
+[7FFFCE9FF6C0]  BeginTransaction in : hCard=2007348317
+[7FFFCE9FF6C0]  BeginTransaction out : ret=0
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=17
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=12
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=39 
+			 RecvBuff=62238701018302C000800200A18409546F6B656E496E666F8A0104860800000000003000309000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=163 
+			 RecvBuff=2020202020202020202020202020202020202020202020202020202020202020416C616464696E20522E442E20202020202020202020202020202020202020204A614361727461204C61736572202020344534363030313333353735353034360C04000000000000000000000000000000000000100000000400000000000000FFFFFFFF00000000FFFFFFFF0100000000000000000000000000000000000000FF9000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=0000CB869000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=000120009000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=10
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=51 
+			 RecvBuff=622F87010883020020800200108A0104860E00FF003000FF001000FF00100000850F00010000AA000410000000000010109000
+[7FFFCE9FF6C0]  Transmit in : hCard=2007348317, SendLength=10
+[7FFFCE9FF6C0]  Transmit out : ret=0, RecvLength=51 
+			 RecvBuff=622F87010883020010800200108A0104860E00FF001000FF001000FF00FF0000850F00010000FF000410000000000010109000
+[7FFFCE9FF6C0]  EndTransaction in : hCard=2007348317
+[7FFFCE9FF6C0]  EndTransaction out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFCE9FF6C0]  Connect in : hContext=178172910
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  Connect out : ret=0
+[7FFFCE9FF6C0]  Status in : hCard=597773674
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  Status out : ret=0
+[7FFFCE9FF6C0]  Status in : hCard=597773674
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFCE9FF6C0]  Status out : ret=0
+[7FFFCE9FF6C0]  Disconnect in : hCard=597773674, Disposition=0
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFCE9FF6C0]  Disconnect out : ret=0
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  BeginTransaction in : hCard=2007348317
+[7FFFE54486C0]  BeginTransaction out : ret=0
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=17
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=2 
+			 RecvBuff=9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=12
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=39 
+			 RecvBuff=62238701018302C000800200A18409546F6B656E496E666F8A0104860800000000003000309000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=163 
+			 RecvBuff=2020202020202020202020202020202020202020202020202020202020202020416C616464696E20522E442E20202020202020202020202020202020202020204A614361727461204C61736572202020344534363030313333353735353034360C04000000000000000000000000000000000000100000000400000000000000FFFFFFFF00000000FFFFFFFF0100000000000000000000000000000000000000FF9000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=0000CB869000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=5
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=6 
+			 RecvBuff=000120009000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=10
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=51 
+			 RecvBuff=622F87010883020020800200108A0104860E00FF003000FF001000FF00100000850F00010000AA000410000000000010109000
+[7FFFE54486C0]  Transmit in : hCard=2007348317, SendLength=10
+[7FFFE54486C0]  Transmit out : ret=0, RecvLength=51 
+			 RecvBuff=622F87010883020010800200108A0104860E00FF001000FF001000FF00FF0000850F00010000FF000410000000000010109000
+[7FFFE54486C0]  EndTransaction in : hCard=2007348317
+[7FFFE54486C0]  EndTransaction out : ret=0
+[7FFFE54486C0]  Connect in : hContext=178172910
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFE54486C0]  Status in : hCard=1067809021
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Status in : hCard=1067809021
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Disconnect in : hCard=1067809021, Disposition=0
+[7FFFE54486C0]  Disconnect out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  Connect in : hContext=178172910
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFE54486C0]  Status in : hCard=998837696
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Status in : hCard=998837696
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Disconnect in : hCard=998837696, Disposition=0
+[7FFFE54486C0]  Disconnect out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=178172910, ReadersBufferLen='0'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers=''
+[7FFFE54486C0]  ListReaders in : hContext=178172910, ReadersBufferLen='59'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  Connect in : hContext=178172910
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFE54486C0]  Status in : hCard=578942009
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Status in : hCard=578942009
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Disconnect in : hCard=578942009, Disposition=0
+[7FFFE54486C0]  Disconnect out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  IsValidContext in : hContext=811051198
+[7FFFE54486C0]  IsValidContext out : ret=0
+[7FFFE54486C0]  ListReaders in : hContext=811051198, ReadersBufferLen='2048'
+[7FFFE54486C0]  ListReaders out : ret=0, ReadersBufferLen=59, Readers='Aladdin R.D. JaCarta [SCR Interface] (000000000000) 00 00'
+[7FFFE54486C0]  GetStatusChange in : hContext=811051198
+[7FFFE54486C0]  GetStatusChange out : ret=0
+[7FFFE54486C0]  Connect in : hContext=178172910
+[7FFFE54486C0]  Connect out : ret=0
+[7FFFE54486C0]  Status in : hCard=461177989
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Status in : hCard=461177989
+[7FFFE54486C0]  Status out : ret=0
+[7FFFE54486C0]  Disconnect in : hCard=461177989, Disposition=0
+[7FFFE54486C0]  Disconnect out : ret=0
+[7FFFF56FFAC0]  IsValidContext in : hContext=811051198
+[7FFFF56FFAC0]  IsValidContext out : ret=0
+[7FFFF56FFAC0]  Cancel in : hContext=811051198
+[7FFFF56FFAC0]  Cancel out : ret=0
+[7FFFF56FFAC0]  Disconnect in : hCard=2007348317, Disposition=0
+[7FFFF56FFAC0]  Disconnect out : ret=0

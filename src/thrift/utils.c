@@ -46,7 +46,9 @@ end:
     return 0;
 }
 
-static pthread_mutex_t clientMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t clientMutex = PTHREAD_MUTEX_INITIALIZER,
+                       logMutex = PTHREAD_MUTEX_INITIALIZER;
+
 static GPtrArray *thriftClients = NULL;
 
 void CleanClientData(void* clientData) {
@@ -103,8 +105,9 @@ void* GetThriftClient() {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "100.10.253.56",
-                            "port",      9091,
+                            //"hostname",  "192.168.1.64",
+                            "hostname",  "127.0.0.1",
+                            "port",      9092,
                             NULL);
 
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
@@ -150,4 +153,22 @@ end:
   pthread_mutex_unlock(&clientMutex);
 
   return clientData;
+}
+
+void OgonLog(FILE* f, const char *func, const char *fmt, ...)
+{
+
+  pthread_mutex_lock(&logMutex);
+
+	va_list args;
+
+	fprintf(f, "[%lX]  %s : ", pthread_self(), func);
+
+	va_start(args, fmt);
+	vfprintf(f, fmt, args);
+	va_end(args);
+
+	fprintf(f, "\n");
+
+  pthread_mutex_unlock(&logMutex);
 }

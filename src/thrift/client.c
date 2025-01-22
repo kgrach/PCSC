@@ -12,6 +12,15 @@
 #include "client.h"
 #include "utils.h"
 
+FILE* log_file = NULL;
+
+void __attribute__((constructor)) start_logger (void) {
+   log_file = fopen("ogon.log", "w+");
+}
+
+void __attribute__((destructor)) stop_logger() {
+  fclose(log_file);
+}
 
 LONG Ogon_SCardEstablishContext(void* clientData, 
                                 DWORD dwScope, 
@@ -23,6 +32,8 @@ LONG Ogon_SCardEstablishContext(void* clientData,
   struct ThriftClientData *client = clientData;
 
   return_ec *ret_rpc = g_object_new(TYPE_RETURN_EC, NULL);
+
+  OgonLog(log_file, "EstablishContext in", "Scope=%ld", dwScope);
   
   if (ogon_if_establish_context(client->client, &ret_rpc, dwScope, &client->error)) {
 
@@ -38,6 +49,8 @@ LONG Ogon_SCardEstablishContext(void* clientData,
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "EstablishContext out", "ret=%ld, hContext=%ld", ret, *phContext);
+
   return ret;
 }
 
@@ -46,12 +59,11 @@ LONG Ogon_SCardReleaseContext(void* clientData,SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
-  if (ogon_if_release_context(client->client, &ret, hContext, &client->error)) {
+  OgonLog(log_file, "ReleaseContext in", "hContext=%ld", hContext);
 
-    /*g_object_get(ret_rpc,
-                  "retValue", &ret,
-                  NULL);                 */
-  }
+  ogon_if_release_context(client->client, &ret, hContext, &client->error);
+
+  OgonLog(log_file, "ReleaseContext out", "ret=%ld", ret);
 
   return ret;
 }
@@ -63,6 +75,8 @@ LONG Ogon_SCardListReaders(void* clientData,SCARDCONTEXT hContext,
     
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "ListReaders in", "hContext=%ld, ReadersBufferLen='%ld'", hContext, *pcchReaders);
 
   return_lr *ret_rpc = g_object_new(TYPE_RETURN_LR, NULL);
 
@@ -89,6 +103,8 @@ LONG Ogon_SCardListReaders(void* clientData,SCARDCONTEXT hContext,
   }
 
   g_object_unref(ret_rpc);
+
+  OgonLog(log_file, "ListReaders out", "ret=%ld, ReadersBufferLen=%ld, Readers='%s'", ret, *pcchReaders, mszReaders ? mszReaders : "");
 
   return ret;
 }
@@ -136,6 +152,8 @@ LONG Ogon_SCardConnect(void* clientData,SCARDCONTEXT hContext,
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
+  OgonLog(log_file, "Connect in", "hContext=%ld", hContext);
+
   return_c *ret_rpc = g_object_new(TYPE_RETURN_C, NULL);
   
   if (ogon_if_connect(client->client, &ret_rpc, hContext, (LPCSTR_RPC)szReader, dwShareMode, dwPreferredProtocols, &client->error)) {
@@ -154,6 +172,8 @@ LONG Ogon_SCardConnect(void* clientData,SCARDCONTEXT hContext,
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "Connect out", "ret=%ld", ret);
+
   return ret;
 }
 
@@ -164,6 +184,9 @@ LONG Ogon_SCardReconnect(void* clientData,SCARDHANDLE hCard,
                          LPDWORD pdwActiveProtocol) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+  
+  OgonLog(log_file, "Reconnect in", "hCard=%ld, ShareMode=%ld, PreferredProtocols=%ld, Initialization=%ld", 
+          hCard, dwShareMode, dwPreferredProtocols, dwInitialization);
 
   return_r *ret_rpc = g_object_new(TYPE_RETURN_R, NULL);
   
@@ -180,6 +203,8 @@ LONG Ogon_SCardReconnect(void* clientData,SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "Reconnect out", "ret=%ld, ActiveProtocol=%ld", ret, *pdwActiveProtocol);
+
   return ret;
 }
 
@@ -188,7 +213,11 @@ LONG Ogon_SCardDisconnect(void* clientData,SCARDHANDLE hCard, DWORD dwDispositio
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
+  OgonLog(log_file, "Disconnect in", "hCard=%ld, Disposition=%ld", hCard, dwDisposition);
+ 
   ogon_if_disconnect(client->client, &ret, hCard, dwDisposition, &client->error);
+
+  OgonLog(log_file, "Disconnect out", "ret=%ld", ret);
 
   return ret;
 }
@@ -202,6 +231,8 @@ LONG Ogon_SCardStatus(void* clientData,SCARDHANDLE hCard,
                       LPDWORD pcbAtrLen) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "Status in", "hCard=%ld", hCard);
 
   return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
 
@@ -247,16 +278,20 @@ LONG Ogon_SCardStatus(void* clientData,SCARDHANDLE hCard,
   }
 
   g_object_unref(ret_rpc);
+  
+  OgonLog(log_file, "Status out", "ret=%ld", ret);
 
   return ret;
 }
 
-LONG Ogon_SCardGetStatusChange(void* clientData,SCARDCONTEXT hContext, 
+LONG Ogon_SCardGetStatusChange(void* clientData, SCARDCONTEXT hContext, 
                                DWORD dwTimeout,	
                                SCARD_READERSTATE *rgReaderStates, 
                                DWORD cReaders) { 
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "GetStatusChange in", "hContext=%ld", hContext);
 
   return_gsc *ret_rpc = g_object_new(TYPE_RETURN_GSC, NULL);
   
@@ -312,6 +347,8 @@ LONG Ogon_SCardGetStatusChange(void* clientData,SCARDCONTEXT hContext,
   g_ptr_array_free(inReaderStates, TRUE);
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "GetStatusChange out", "ret=%ld", ret);
+
   return ret;
 }
 
@@ -325,6 +362,8 @@ LONG Ogon_SCardTransmit(void* clientData,SCARDHANDLE hCard,
 
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "Transmit in", "hCard=%ld, SendLength=%ld", hCard, cbSendLength);
 
   return_t *ret_rpc = g_object_new(TYPE_RETURN_T, NULL);
 
@@ -363,6 +402,24 @@ LONG Ogon_SCardTransmit(void* clientData,SCARDHANDLE hCard,
   g_object_unref(ioSendPCI);
   g_object_unref(ret_rpc);
 
+
+  char *buf = malloc(*pcbRecvLength * 2 + 1);
+  memset(buf, 0, *pcbRecvLength * 2 + 1);
+
+  int j;
+  const char bin2char[] = "0123456789ABCDEF";
+  
+  for(j = 0; j < *pcbRecvLength; j++ ){
+    char* ch = ((char*)pbRecvBuffer + j);
+
+    *(buf + 2*j) = bin2char[ (*ch >> 4) & 0x0F ];
+    *(buf + (2*j)+1) = bin2char[*ch & 0x0F];  
+  }
+
+  OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
+  
+  free(buf);
+
   return ret;
 }
 
@@ -370,7 +427,11 @@ LONG Ogon_SCardBeginTransaction(void* clientData,SCARDHANDLE hCard) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
   
+  OgonLog(log_file, "BeginTransaction in", "hCard=%ld", hCard);
+
   ogon_if_begin_transaction(client->client, &ret, hCard, &client->error);
+
+  OgonLog(log_file, "BeginTransaction out", "ret=%ld", ret);
 
   return ret;
 }
@@ -379,7 +440,11 @@ LONG Ogon_SCardEndTransaction(void* clientData,SCARDHANDLE hCard, DWORD dwDispos
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
+  OgonLog(log_file, "EndTransaction in", "hCard=%ld", hCard);
+
   ogon_if_end_transaction(client->client, &ret, hCard, dwDisposition, &client->error);
+
+  OgonLog(log_file, "EndTransaction out", "ret=%ld", ret);
 
   return ret;
 }
@@ -388,6 +453,8 @@ LONG Ogon_SCardGetAttrib(void* clientData,SCARDHANDLE hCard, DWORD dwAttrId, LPB
   
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "GetAttrib in", "hCard=%ld", hCard);
 
   return_ga *ret_rpc = g_object_new(TYPE_RETURN_GA, NULL);
   
@@ -415,6 +482,8 @@ LONG Ogon_SCardGetAttrib(void* clientData,SCARDHANDLE hCard, DWORD dwAttrId, LPB
 
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "GetAttrib out", "ret=%ld", ret);
+
   return ret;
 }
 
@@ -427,6 +496,8 @@ LONG Ogon_SCardControl(void* clientData,SCARDHANDLE hCard,
                        LPDWORD lpBytesReturned) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
+
+  OgonLog(log_file, "Control in", "hCard=%ld", hCard);
 
   return_ctrl *ret_rpc = g_object_new(TYPE_RETURN_CTRL, NULL);
 
@@ -456,6 +527,8 @@ LONG Ogon_SCardControl(void* clientData,SCARDHANDLE hCard,
   g_byte_array_free (sendBuf, TRUE);
   g_object_unref(ret_rpc);
 
+  OgonLog(log_file, "Control out", "ret=%ld", ret);
+
   return ret;                                             
 }
 
@@ -463,8 +536,11 @@ LONG Ogon_SCardCancel(void* clientData,SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
+  OgonLog(log_file, "Cancel in", "hContext=%ld", hContext);
 
   ogon_if_cancel(client->client, &ret, hContext, &client->error);
+
+  OgonLog(log_file, "Cancel out", "ret=%ld", ret);
 
   return ret;
 }
@@ -473,7 +549,11 @@ LONG Ogon_SCardIsValidContext(void* clientData,SCARDCONTEXT hContext) {
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
+  OgonLog(log_file, "IsValidContext in", "hContext=%ld", hContext);
+
   ogon_if_is_valid_context(client->client, &ret, hContext, &client->error);
+
+  OgonLog(log_file, "IsValidContext out", "ret=%ld", ret);
 
   return ret;
 }
