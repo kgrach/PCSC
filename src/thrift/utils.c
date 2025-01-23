@@ -105,8 +105,8 @@ void* GetThriftClient() {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            //"hostname",  "192.168.1.64",
-                            "hostname",  "127.0.0.1",
+                            "hostname",  "192.168.1.65",
+                            //"hostname",  "127.0.0.1",
                             "port",      9092,
                             NULL);
 
@@ -171,4 +171,27 @@ void OgonLog(FILE* f, const char *func, const char *fmt, ...)
 	fprintf(f, "\n");
 
   pthread_mutex_unlock(&logMutex);
+}
+
+char* Dump2Str(char* in_buf, unsigned long in_buf_len) {
+
+  const char bin2char[] = "0123456789ABCDEF";  
+  
+  char *out_buf = malloc(in_buf_len * 2 + 1);
+  
+  memset(out_buf, 0, in_buf_len * 2 + 1);
+
+  int j;
+  
+  for(j = 0; j < in_buf_len; j++ ){
+    char ch = *(in_buf + j);
+
+    *(out_buf + 2*j) = bin2char[ (ch >> 4) & 0x0F ];
+    *(out_buf + (2*j)+1) = bin2char[ch & 0x0F];  
+  }
+
+  //OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
+  
+  //free(buf);
+  return out_buf;
 }

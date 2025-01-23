@@ -172,7 +172,7 @@ LONG Ogon_SCardConnect(void* clientData,SCARDCONTEXT hContext,
 
   g_object_unref(ret_rpc);
 
-  OgonLog(log_file, "Connect out", "ret=%ld", ret);
+  OgonLog(log_file, "Connect out", "ret=%ld, hCard=%ld, ActiveProtocol=%ld", ret, *phCard, *pdwActiveProtocol);
 
   return ret;
 }
@@ -232,7 +232,7 @@ LONG Ogon_SCardStatus(void* clientData,SCARDHANDLE hCard,
   LONG ret = SCARD_F_INTERNAL_ERROR;
   struct ThriftClientData *client = clientData;
 
-  OgonLog(log_file, "Status in", "hCard=%ld", hCard);
+  OgonLog(log_file, "Status in", "hCard=%ld, ReaderName='%s', ReaderBufLen=%ld", hCard, szReaderName ? szReaderName : "", *pcchReaderLen);
 
   return_s *ret_rpc = g_object_new(TYPE_RETURN_S, NULL);
 
@@ -279,10 +279,16 @@ LONG Ogon_SCardStatus(void* clientData,SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
   
-  OgonLog(log_file, "Status out", "ret=%ld", ret);
+  char *Atr = Dump2Str((char*)pbAtr, *pcbAtrLen);
+   
 
+  OgonLog(log_file, "Status out", "ret=%ld, State=%ld, Protocol=%ld, ReaderName='%s', ReaderBufLen=%ld \n\t\t\tAtr='%s', AtrLen=%ld", ret, *pdwState, *pdwProtocol,
+                                      szReaderName ? szReaderName : "", *pcchReaderLen, Atr, *pcbAtrLen);
+
+  free(Atr);
   return ret;
 }
+
 
 LONG Ogon_SCardGetStatusChange(void* clientData, SCARDCONTEXT hContext, 
                                DWORD dwTimeout,	
@@ -403,18 +409,7 @@ LONG Ogon_SCardTransmit(void* clientData,SCARDHANDLE hCard,
   g_object_unref(ret_rpc);
 
 
-  char *buf = malloc(*pcbRecvLength * 2 + 1);
-  memset(buf, 0, *pcbRecvLength * 2 + 1);
-
-  int j;
-  const char bin2char[] = "0123456789ABCDEF";
-  
-  for(j = 0; j < *pcbRecvLength; j++ ){
-    char* ch = ((char*)pbRecvBuffer + j);
-
-    *(buf + 2*j) = bin2char[ (*ch >> 4) & 0x0F ];
-    *(buf + (2*j)+1) = bin2char[*ch & 0x0F];  
-  }
+  char *buf = Dump2Str((char*)pbRecvBuffer, *pcbRecvLength);
 
   OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
   

@@ -15,6 +15,8 @@ struct ThriftClientData {
     GError           *error;
 };
 
+char* Dump2Str(char* in_buf, unsigned long in_buf_len);
+
 void OgonLog(FILE* f, const char *func, const char *fmt, ...);
 
 #endif
