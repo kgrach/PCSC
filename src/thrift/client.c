@@ -15,11 +15,11 @@
 FILE* log_file = NULL;
 
 void __attribute__((constructor)) start_logger (void) {
-   log_file = fopen("ogon.log", "w+");
+  //log_file = fopen("ogon.log", "w+");
 }
 
 void __attribute__((destructor)) stop_logger() {
-  fclose(log_file);
+  //fclose(log_file);
 }
 
 LONG Ogon_SCardEstablishContext(void* clientData, 
@@ -279,13 +279,16 @@ LONG Ogon_SCardStatus(void* clientData,SCARDHANDLE hCard,
 
   g_object_unref(ret_rpc);
   
-  char *Atr = Dump2Str((char*)pbAtr, *pcbAtrLen);
-   
+  if(log_file) {
+    char *Atr = Dump2Str((char*)pbAtr, *pcbAtrLen);
+    
 
-  OgonLog(log_file, "Status out", "ret=%ld, State=%ld, Protocol=%ld, ReaderName='%s', ReaderBufLen=%ld \n\t\t\tAtr='%s', AtrLen=%ld", ret, *pdwState, *pdwProtocol,
-                                      szReaderName ? szReaderName : "", *pcchReaderLen, Atr, *pcbAtrLen);
+    OgonLog(log_file, "Status out", "ret=%ld, State=%ld, Protocol=%ld, ReaderName='%s', ReaderBufLen=%ld \n\t\t\tAtr='%s', AtrLen=%ld", ret, *pdwState, *pdwProtocol,
+                                        szReaderName ? szReaderName : "", *pcchReaderLen, Atr, *pcbAtrLen);
 
-  free(Atr);
+    free(Atr);
+  }
+  
   return ret;
 }
 
@@ -408,12 +411,14 @@ LONG Ogon_SCardTransmit(void* clientData,SCARDHANDLE hCard,
   g_object_unref(ioSendPCI);
   g_object_unref(ret_rpc);
 
+  if(log_file) {
 
-  char *buf = Dump2Str((char*)pbRecvBuffer, *pcbRecvLength);
+    char *buf = Dump2Str((char*)pbRecvBuffer, *pcbRecvLength);
 
-  OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
-  
-  free(buf);
+    OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
+    
+    free(buf);
+  }
 
   return ret;
 }

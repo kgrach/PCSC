@@ -71,8 +71,6 @@ void CleanClientData(void* clientData) {
 
 void* GetThriftClient() {
 
-    //return NULL;
-
     pthread_mutex_lock(&clientMutex);
 
     struct ThriftClientData *clientData = NULL;
@@ -105,8 +103,7 @@ void* GetThriftClient() {
 #endif
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
-                            "hostname",  "192.168.1.65",
-                            //"hostname",  "127.0.0.1",
+                            "hostname",  "127.0.0.1",
                             "port",      9092,
                             NULL);
 
@@ -158,19 +155,22 @@ end:
 void OgonLog(FILE* f, const char *func, const char *fmt, ...)
 {
 
-  pthread_mutex_lock(&logMutex);
+  if(f) {
 
-	va_list args;
+    pthread_mutex_lock(&logMutex);
 
-	fprintf(f, "[%lX]  %s : ", pthread_self(), func);
+    va_list args;
 
-	va_start(args, fmt);
-	vfprintf(f, fmt, args);
-	va_end(args);
+    fprintf(f, "[%lX]  %s : ", pthread_self(), func);
 
-	fprintf(f, "\n");
+    va_start(args, fmt);
+    vfprintf(f, fmt, args);
+    va_end(args);
 
-  pthread_mutex_unlock(&logMutex);
+    fprintf(f, "\n");
+
+    pthread_mutex_unlock(&logMutex);
+  }
 }
 
 char* Dump2Str(char* in_buf, unsigned long in_buf_len) {
@@ -190,8 +190,5 @@ char* Dump2Str(char* in_buf, unsigned long in_buf_len) {
     *(out_buf + (2*j)+1) = bin2char[ch & 0x0F];  
   }
 
-  //OgonLog(log_file, "Transmit out", "ret=%ld, RecvLength=%ld \n\t\t\t RecvBuff=%s", ret, *pcbRecvLength, buf);
-  
-  //free(buf);
   return out_buf;
 }
