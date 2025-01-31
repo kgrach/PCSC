@@ -2,7 +2,15 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <unistd.h>
 #include <pthread.h>
+#include <sys/syscall.h>
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+
+
 
 #include <thrift/c_glib/transport/thrift_transport.h>
 #include <thrift/c_glib/transport/thrift_socket.h>
@@ -68,6 +76,43 @@ void CleanClientData(void* clientData) {
   g_object_unref (cli->socket);
 }
 
+unsigned short GetServerPort() {
+    
+    int fd_w, fd_r, len;
+    char buf_in[100], buf_out[100];
+    const char *fifoname = getenv("OGON_COOKIE");
+
+    unsigned short port = 0;
+
+    strcpy(buf_in, "/tmp/");
+    strcpy(buf_in+strlen(buf_in), fifoname);
+    strcpy(buf_in+strlen(buf_in), ".in");
+
+    strcpy(buf_out, "/tmp/");
+    strcpy(buf_out+strlen(buf_out), fifoname);
+    strcpy(buf_out+strlen(buf_out), ".out");
+
+    if ( (fd_w = open(buf_in, O_WRONLY))> 0 ) {
+
+        write(fd_w, &fd_w, 1);      
+        close(fd_w);
+    }
+
+    if ( (fd_r = open(buf_out, O_RDONLY))> 0 ) {
+
+        memset(buf_out, '\0', sizeof(buf_out));
+        len = read(fd_r, buf_out, sizeof(buf_out)-1);
+
+        if(2 == len) {
+          port = *(unsigned short*)&buf_out[0];
+        }
+        
+        close(fd_r);
+
+    }
+    return port;
+}
+
 
 void* GetThriftClient() {
 
@@ -78,7 +123,7 @@ void* GetThriftClient() {
     if(NULL == thriftClients)
         thriftClients = g_ptr_array_new();
 
-    long tid =  gettid();
+    long tid =  syscall(SYS_gettid);//gettid();
 
     for(int i = 0; i < thriftClients->len; i++) {
 
@@ -101,10 +146,18 @@ void* GetThriftClient() {
 #if (!GLIB_CHECK_VERSION (2, 36, 0))
   g_type_init ();
 #endif
+  
+  static unsigned short port = 0;
+  
+  if(0 == port) 
+    port = GetServerPort();
+
+  if(0 == port)
+    goto end;
 
   socket    = g_object_new (THRIFT_TYPE_SOCKET,
                             "hostname",  "127.0.0.1",
-                            "port",      9092,
+                            "port",      port,
                             NULL);
 
   transport = g_object_new (THRIFT_TYPE_BUFFERED_TRANSPORT,
